@@ -6,12 +6,14 @@ public class Subject : EventUser
 {
     public Subject()
     {
-        eventManager.SubscribeToEvent("Update", Update);
+        eventManager.SubscribeToAction("Update", Update);
+        eventManager.SubscribeToAction("FixedUpdate", FixedUpdate);
     }
 
     protected override void Update()
     {
         //Check if condition is met
-        eventManager.InvokeEvent("TestEvent");
+        eventManager.InvokeEvent("ChangeStat", "Health", -1f);
+        eventManager.InvokeEvent("ChangeStat", "Thirst", -1f);
     }
 }
