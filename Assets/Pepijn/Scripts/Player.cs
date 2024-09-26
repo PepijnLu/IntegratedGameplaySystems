@@ -5,16 +5,13 @@ using UnityEngine;
 
 public class Player : EventUser
 {
-    private Dictionary<string, float> statsDict = new()
-    {
-        ["Health"] = 10,
-        ["Thirst"] = 10,
-        ["Hunger"] = 10,
-    };
+    private PlayerStats playerStats;
     private delegate void ChangeStatDelegate(string _stat, float _amount);
 
     public Player()
     {
+        playerStats = new PlayerStats(this);
+
         eventManager.SubscribeToAction("Update", Update);
         eventManager.SubscribeToAction("FixedUpdate", FixedUpdate);
         eventManager.SubscribeToEvent("ChangeStat", new ChangeStatDelegate(ChangeStat));
@@ -32,8 +29,9 @@ public class Player : EventUser
 
     private void ChangeStat(string _stat, float _amount)
     {
-        statsDict[_stat] += _amount;
-        Debug.Log($"Player took {_amount} {_stat} and is now at {statsDict[_stat]} {_stat}");
+        playerStats.statsDict[_stat]["Current" + _stat] += _amount;
+        //Debug.Log($"Player took {_amount} {_stat} and is now at {playerStats.statsDict[_stat]["Current" + _stat]} {_stat}");
+        eventManager.InvokeEvent("CheckStat", _stat);
     }
 }
 
