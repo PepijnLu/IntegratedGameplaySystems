@@ -14,21 +14,17 @@ public class R_InputHandler
             if(Input.GetKeyDown(keyCommand.key)) 
             {
                 keyPressed = true;
-                // keyCommand.command.Execute();
-                
                 Debug.Log($"Key input detected: {keyCommand.key}");
-
+                UnBindInput(keyCommand.key);
                 return keyCommand.command;
             }
             
             if(Input.GetKeyUp(keyCommand.key)) 
             {
                 keyPressed = false;
-                // keyCommand.command.Undo();
-
                 Debug.Log($"Key input released: {keyCommand.key}");
-
-                return keyCommand.command;
+                UnBindInput(keyCommand.key);
+                return null;
             }
         }
 

@@ -16,13 +16,3 @@ public interface IAxisCommand
 {
     float GetAxisValue();
 }
-
-
-    
-// void CheckInList(List<R_Weapon> weapons, R_Weapon weapon) 
-// {
-//     if(weapons.Contains(weapon)) 
-//     {
-        
-//     }
-// }

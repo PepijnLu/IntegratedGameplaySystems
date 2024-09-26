@@ -16,22 +16,15 @@ public class AxisCommand : IAxisCommand
 public class AddCommand<T> : ICommand
 {
     private ConcreteComponentAdd<T> component;
-    
-    private readonly R_InputHandler input;
-    private readonly ICommand command;
     private readonly List<T> inventory;
     private readonly T t;
 
     public AddCommand
     (
-        R_InputHandler input, 
-        ICommand command,
         List<T> inventory,
         T t
     ) 
     {
-        this.input = input;
-        this.command = command;
         this.inventory = inventory;
         this.t = t;
 
@@ -40,7 +33,7 @@ public class AddCommand<T> : ICommand
 
     public void CustomAwake() 
     {
-        component = new(input, command, inventory, t);
+        component = new(inventory, t);
         Debug.Log($"component initialized: {component != null}");
     }
 
@@ -53,9 +46,7 @@ public class AddCommand<T> : ICommand
     {
         component.Drop();
     }
-
 }
-// Get from the decorate design pattern the method to check what the type of weapon it is to add
 
 public class SwitchWeaponCommand : ICommand
 {

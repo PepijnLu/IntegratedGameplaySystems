@@ -17,6 +17,8 @@ public class R_Weapon : ScriptableObject
     }
 
 
+
+
     // Might use this method for other purposes
     // public bool InRange()
     // {

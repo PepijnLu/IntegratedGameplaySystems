@@ -18,22 +18,14 @@ public class ConcreteDecorator<T> : Decorator
         this.t = t;
     }
 
-    public void CheckToAdd(R_InputHandler inputHandler, ICommand command) 
+    public void CheckToAdd() 
     {
-        if(inputHandler.keyCommands.Find(k => k.key == KeyCode.E)?.command == command) 
-        {
-            Debug.Log($"The 'E' key is pressed, adding {t}...");
-            Add(inventory, t);
-        }
+        Add(inventory, t);
     }
 
-    public void CheckToRemove(R_InputHandler inputHandler, ICommand command)
+    public void CheckToRemove()
     {
-        if(inputHandler.keyCommands.Find(k => k.key == KeyCode.R)?.command == command)  
-        {
-            Debug.Log($"The 'R' key is pressed, dropping {t}...");
-            Drop(inventory, t);
-        }
+        Drop(inventory, t);
     }
 }
 

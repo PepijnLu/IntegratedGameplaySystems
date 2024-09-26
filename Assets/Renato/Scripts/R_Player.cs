@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
@@ -17,7 +18,6 @@ public class R_Player
     // Private
     private R_InputHandler input; // Key input
     private ICommand addCommand, removeCommand;
-    // private ICommand command;
     
     
     // Private readonly
@@ -36,20 +36,18 @@ public class R_Player
     public void CustomAwake() 
     {
         input = new();
-        addCommand = new AddCommand<GameObject>(input, addCommand, weaponInventory, null);
-        removeCommand = new AddCommand<GameObject>(input, removeCommand, weaponInventory, null);
+        addCommand = new AddCommand<GameObject>(weaponInventory, null);
+        removeCommand = new AddCommand<GameObject>(weaponInventory, null);
 
         input.BindInputToCommand(KeyCode.E, addCommand);
         input.BindInputToCommand(KeyCode.R, removeCommand);
         
         Debug.Log($"addCommand initialized: {addCommand != null}");
-        Debug.Log($"addCommand initialized: {removeCommand != null}");
     }
     
     public void CustomUpdate() 
     {
         addCommand = input.HandleKeyInput();
-        removeCommand = input.HandleKeyInput();
 
         input.HandleMovement
         (
@@ -60,33 +58,28 @@ public class R_Player
         );
 
         if(InRangeOfWeapon()) 
-        {
-            addCommand = new AddCommand<GameObject>(input, addCommand, weaponInventory, tempWeapon);
-            addCommand.Execute();
+        {            
+            if(input.keyCommands.Find(k => k.key == KeyCode.E)?.command == addCommand) 
+            {
+                addCommand = new AddCommand<GameObject>(weaponInventory, tempWeapon);
+                
+                addCommand.Execute();
+                tempWeapon.SetActive(false);
+            }
         }
 
-        
         // Removing the weapon if the player has weapons in their inventory
-        if (weaponInventory.Count > 0 && removeCommand != null) 
+        if(input.keyCommands.Find(k => k.key == KeyCode.R)?.command == addCommand) 
         {
-            // Passing the last weapon from the weapon inventory to remove
-            GameObject weaponToRemove = weaponInventory[^1];
-            removeCommand = new AddCommand<GameObject>(input, removeCommand, weaponInventory, weaponToRemove);
-            removeCommand.Undo();
+            if (weaponInventory.Count > 0) 
+            {                
+                // Passing the last weapon from the weapon inventory to remove
+                GameObject weaponToRemove = weaponInventory[^1];
+                removeCommand = new AddCommand<GameObject>(weaponInventory, weaponToRemove);
+                removeCommand.Undo();
+            }
         }
     }
-
-        // if(inRange) 
-        // {
-        //     // Execute the commmand to add the weapon
-        //     // Need to find a way on how to pass in the Weapon type as the inventory and as the weapon
-        //     // The inventory cant consist of Weapon since that class is not attached to a weapon
-        //     // So the inventory should be a list of GameObjects
-        //     // But if I pass in only the GameObjects, I can't determine what type of weapon it is
-        //     // And if I can't do that then there are also no attacks or whatsover linked with that weapon
-        //     // Since its only a GameObject without the Weapon class
-        //     // addWeaponCommand = new(input, command, weaponInventory, tempWeapon);
-        // }
 
     public bool InRangeOfWeapon()
     {
@@ -116,3 +109,15 @@ public class R_Player
         return false;
     }
 }
+
+
+        // if(inRange) 
+        // {
+        //     // Execute the commmand to add the weapon
+        //     // Need to find a way on how to pass in the Weapon type as the inventory and as the weapon
+        //     // The inventory cant consist of Weapon since that class is not attached to a weapon
+        //     // So the inventory should be a list of GameObjects
+        //     // But if I pass in only the GameObjects, I can't determine what type of weapon it is
+        //     // And if I can't do that then there are also no attacks or whatsover linked with that weapon
+        //     // Since its only a GameObject without the Weapon class
+        // }
