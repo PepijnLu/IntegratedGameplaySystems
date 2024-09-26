@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private EventManager eventManager;
+    private UIManager uiManager;
     private void Start()
     {
         //Make a new EventManager
@@ -14,7 +15,8 @@ public class GameManager : MonoBehaviour
         placeholderEventUser.SetEventManager(eventManager);
 
         new Player();
-        new Subject();
+        new DecreaseStatsOverTime();
+        uiManager = new();
 
         //Invoke start
         eventManager.InvokeAction("Start");

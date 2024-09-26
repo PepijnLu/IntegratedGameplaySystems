@@ -6,32 +6,46 @@ using UnityEngine;
 public class Player : EventUser
 {
     private PlayerStats playerStats;
-    private delegate void ChangeStatDelegate(string _stat, float _amount);
-
+    public StateMachine stateMachine;
+    public Dictionary<string, PlayerState> playerStates;
     public Player()
     {
-        playerStats = new PlayerStats(this);
+        //Give the player stats and a statemachine
+        playerStats = new();
+        stateMachine = new(this);
 
         eventManager.SubscribeToAction("Update", Update);
         eventManager.SubscribeToAction("FixedUpdate", FixedUpdate);
-        eventManager.SubscribeToEvent("ChangeStat", new ChangeStatDelegate(ChangeStat));
+
+        //Set the beginning survival states
+        playerStates = new()
+        {
+            ["HungerState"] = stateMachine.playerStateTypes["MaxHungerState"],
+            ["HealthState"] = stateMachine.playerStateTypes["MaxHealthState"],
+            ["ThirstState"] = stateMachine.playerStateTypes["MaxThirstState"],
+        };
     }
 
     protected override void Update()
     {
-        Debug.Log("Player Update");
+        //Test inputs for healing / eating / drinking
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            eventManager.InvokeEvent("ChangeStat", "Health", 1f, true);
+        }
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            eventManager.InvokeEvent("ChangeStat", "Hunger", 1f, true);
+        }
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            eventManager.InvokeEvent("ChangeStat", "Thirst", 1f, true);
+        }
     }
 
     protected override void FixedUpdate()
     {
         Debug.Log("Player FixedUpdate");
-    }
-
-    private void ChangeStat(string _stat, float _amount)
-    {
-        playerStats.statsDict[_stat]["Current" + _stat] += _amount;
-        //Debug.Log($"Player took {_amount} {_stat} and is now at {playerStats.statsDict[_stat]["Current" + _stat]} {_stat}");
-        eventManager.InvokeEvent("CheckStat", _stat);
     }
 }
 

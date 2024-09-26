@@ -35,7 +35,7 @@ public class EventManager
     {
         if (events.ContainsKey(myEvent))
         {
-            events[myEvent].DynamicInvoke(paramaters);
+            events[myEvent]?.DynamicInvoke(paramaters);
         }
     }
 
