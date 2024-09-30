@@ -126,7 +126,7 @@ public class AbilityCombatCommand : ICommand
     }
 }
 
-public class AddWeaponToHUDCommand : UIManager, ICommand
+public class AddWeaponToHUDCommand : R_UIManager, ICommand
 {
     public void Execute()
     {

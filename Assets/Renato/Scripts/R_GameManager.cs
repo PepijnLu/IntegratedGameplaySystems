@@ -7,7 +7,7 @@ public class R_GameManager : MonoBehaviour
     // SerializeField
     [SerializeField] private R_Player Player;
     [SerializeField] private WeaponsGameManager weaponsGameManager;
-    [SerializeField] private UIManager uIManager;
+    [SerializeField] private R_UIManager uIManager;
 
     // Public
 

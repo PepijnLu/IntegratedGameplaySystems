@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private EventManager eventManager;
-    private UIManager uiManager;
+    private R_UIManager uiManager;
     private void Start()
     {
         //Make a new EventManager

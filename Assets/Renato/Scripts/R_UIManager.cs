@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
-public class UIManager
+public class R_UIManager
 {
     [SerializeField] private GameObject UI_Inventory;
     [SerializeField] List<GameObject> UI_Slots = new();
