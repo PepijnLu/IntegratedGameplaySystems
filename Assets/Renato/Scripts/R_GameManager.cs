@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class R_GameManager : MonoBehaviour
 {
     // SerializeField
-    [SerializeField ]private R_Player Player;
+    [SerializeField] private R_Player Player;
     [SerializeField] private WeaponsGameManager weaponsGameManager;
+    [SerializeField] private UIManager uIManager;
 
     // Public
 
@@ -22,6 +24,7 @@ public class R_GameManager : MonoBehaviour
         
         // Instantiate R_Player with the player's Transform
         Player = new(player.transform, 10f);
+        uIManager = new();
     }
 
     void Start()

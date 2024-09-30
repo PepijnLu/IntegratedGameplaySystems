@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Weapon")]
 public class R_Weapon : ScriptableObject
 {
     public GameObject weapon;
+    public Image icon;
     public string Name = "";
     public bool isActive = false;
     public bool isAttacking = false;

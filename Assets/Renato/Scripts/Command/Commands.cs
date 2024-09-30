@@ -125,3 +125,16 @@ public class AbilityCombatCommand : ICommand
         
     }
 }
+
+public class AddWeaponToHUDCommand : UIManager, ICommand
+{
+    public void Execute()
+    {
+        // Add to inventory UI
+    }
+
+    public void Undo()
+    {
+        // Remove from inventory UI
+    }
+}

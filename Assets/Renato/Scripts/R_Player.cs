@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,6 +6,8 @@ public class R_Player
 {
     // SerializeField
     [SerializeField] private List<GameObject> weaponInventory = new();
+    // [SerializeField] private List<GameObject> weaponSlots;
+    [SerializeField] private GameObject activeWeapon;
     [SerializeField] private GameObject tempWeapon;
     [SerializeField] private bool inRange;
 
