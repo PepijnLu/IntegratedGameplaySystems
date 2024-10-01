@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: IceSword
   m_EditorClassIdentifier: 
   weapon: {fileID: 8065828454769501257, guid: e8ab1df87c1c5c7438b37370188e4aa4, type: 3}
-  Name: IceSword
+  icon: {fileID: 0}
+  name: IceSword
   isActive: 0
   isAttacking: 0
   attackRate: 2

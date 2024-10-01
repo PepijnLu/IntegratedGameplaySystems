@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Spear_1
   m_EditorClassIdentifier: 
   weapon: {fileID: 6187300791812268890, guid: 12ba9d115ce7ef64b85b9497c6e2ebc6, type: 3}
-  Name: Spear_1
+  icon: {fileID: 0}
+  name: Spear_1
   isActive: 0
   isAttacking: 0
   attackRate: 2

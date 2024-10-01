@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class R_GameManager : MonoBehaviour
 {
     // SerializeField
-    [SerializeField] private R_Player Player;
-    [SerializeField] private WeaponsGameManager weaponsGameManager;
+    [SerializeField] private R_Player player;
+    [SerializeField] private WeaponGameManager weaponGameManager;
     [SerializeField] private R_UIManager uIManager;
 
     // Public
@@ -14,54 +13,62 @@ public class R_GameManager : MonoBehaviour
     // Protected
 
     // Private
-    private GameObject player;
+    private GameObject playerObj;
 
     // Private Readonly
 
     void Awake() 
     {
-        player = Instantiate(Player.prefab, Player.spawnPoint.position, Player.spawnPoint.rotation);
-        
-        // Instantiate R_Player with the player's Transform
-        Player = new(player.transform, 10f);
+        // Player
+        playerObj = Instantiate(player.prefab, player.spawnPoint.position, player.spawnPoint.rotation);        
+        player = new(playerObj.transform, 10f, weaponGameManager);
+
+        // UI
         uIManager = new();
     }
 
     void Start()
     {
-        weaponsGameManager.ManageWeapons();
+        player.CustomStart();
+        weaponGameManager.InstantiateWeapons();
     }
 
     void Update()
     {
-        Player.CustomUpdate();
+        player.CustomUpdate();
     }
 }
 
 [System.Serializable]
-public class WeaponsGameManager 
+public class WeaponGameManager 
 {
-    public List<R_Weapon> weapons;
+    public List<R_Weapon> allWeapons;
     public List<Transform> spawnPoints;
+    
+    // For the player
+    public List<GameObject> weaponInventory = new();
+    public Dictionary<string, IIdentifiable> dictionary = new();
+    
+    
 
-    public void ManageWeapons() 
+    public void InstantiateWeapons() 
     {
-        if(weapons == null || spawnPoints == null 
-        || weapons.Count == 0 || spawnPoints.Count == 0) return;
+        if(allWeapons == null || spawnPoints == null 
+        || allWeapons.Count == 0 || spawnPoints.Count == 0) return;
 
         // Shuffle the weapons and spawn points lists to randomize them
-        ShuffleList(weapons);
+        ShuffleList(allWeapons);
         ShuffleList(spawnPoints);
 
         // Determine the number of weapons to spawn
-        int weaponsToSpawn = Mathf.Min(weapons.Count, spawnPoints.Count);
+        int weaponsToSpawn = Mathf.Min(allWeapons.Count, spawnPoints.Count);
 
         // Spawn each weapon at a random spawn point
         for (int i = 0; i < weaponsToSpawn; i++)
         {
-            R_Weapon weapon = weapons[i];
+            R_Weapon weapon = allWeapons[i];
             GameObject spawnPoint = spawnPoints[i].gameObject;
-            weapon.Spawn(spawnPoint.transform);
+            weapon.Instantiate(spawnPoint.transform);
         }
     }
 

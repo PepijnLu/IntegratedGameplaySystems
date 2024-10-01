@@ -1,12 +1,11 @@
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
 public class R_Player
 {
     // SerializeField
-    [SerializeField] private List<GameObject> weaponInventory = new();
-    // [SerializeField] private List<GameObject> weaponSlots;
+    // [SerializeField] private List<GameObject> weaponInventory = new();
     [SerializeField] private GameObject activeWeapon;
     [SerializeField] private GameObject tempWeapon;
     [SerializeField] private bool inRange;
@@ -20,16 +19,17 @@ public class R_Player
     private R_InputHandler input; // Key input
     private ICommand addCommand, removeCommand;
     
-    
     // Private readonly
+    private readonly WeaponGameManager w_gameManager;
     private readonly Transform transform; // Player's transform
     private readonly float movementSpeed;
  
     // Constructor
-    public R_Player(Transform transform, float movementSpeed) 
+    public R_Player(Transform transform, float movementSpeed, WeaponGameManager w_gameManager) 
     {
         this.transform = transform;
         this.movementSpeed = movementSpeed;
+        this.w_gameManager = w_gameManager; // Set the instance
 
         CustomAwake();
     }
@@ -37,13 +37,32 @@ public class R_Player
     public void CustomAwake() 
     {
         input = new();
-        addCommand = new AddCommand<GameObject>(weaponInventory, null);
-        removeCommand = new AddCommand<GameObject>(weaponInventory, null);
+    }
+
+    public void CustomStart() 
+    {
+        addCommand = new AddCommand<GameObject>
+        (
+            w_gameManager.weaponInventory, 
+            // w_gameManager.allWeapons,
+            null, 
+            w_gameManager.dictionary
+        );
+
+        removeCommand = new AddCommand<GameObject>
+        (
+            w_gameManager.weaponInventory, 
+            // w_gameManager.allWeapons,
+            null,
+            w_gameManager.dictionary 
+        );
 
         input.BindInputToCommand(KeyCode.E, addCommand);
         input.BindInputToCommand(KeyCode.R, removeCommand);
         
         Debug.Log($"addCommand initialized: {addCommand != null}");
+        Debug.Log($"removeCommand initialized: {removeCommand != null}");
+
     }
     
     public void CustomUpdate() 
@@ -62,22 +81,46 @@ public class R_Player
         {            
             if(input.keyCommands.Find(k => k.key == KeyCode.E)?.command == addCommand) 
             {
-                addCommand = new AddCommand<GameObject>(weaponInventory, tempWeapon);
+                addCommand = new AddCommand<GameObject>
+                (
+                    w_gameManager.weaponInventory, 
+                    // w_gameManager.allWeapons,
+                    tempWeapon, 
+                    w_gameManager.dictionary
+                );
                 
                 addCommand.Execute();
                 tempWeapon.SetActive(false);
+               
+                // addCommand.AddToDictionary(w_gameManager.weaponDict, namableWeapon.Name, namableWeapon, w_gameManager.weaponInventory.Cast<INamable>().ToList());
             }
         }
 
         // Removing the weapon if the player has weapons in their inventory
         if(input.keyCommands.Find(k => k.key == KeyCode.R)?.command == addCommand) 
         {
-            if (weaponInventory.Count > 0) 
+            if (w_gameManager.weaponInventory.Count > 0) 
             {                
-                // Passing the last weapon from the weapon inventory to remove
-                GameObject weaponToRemove = weaponInventory[^1];
-                removeCommand = new AddCommand<GameObject>(weaponInventory, weaponToRemove);
+                GameObject weaponToRemove = w_gameManager.weaponInventory[^1];
+                removeCommand = new AddCommand<GameObject>
+                (
+                    w_gameManager.weaponInventory, 
+                    // w_gameManager.allWeapons,
+                    weaponToRemove, 
+                    w_gameManager.dictionary
+                );
+
                 removeCommand.Undo();
+                Debug.Log($"Weapon Inventory Count After Removal: {w_gameManager.weaponInventory.Count}");
+
+                foreach (var weapon in w_gameManager.weaponInventory)
+                {
+                    Debug.Log($"Weapon Name: {weapon.name}, GameObject: {weapon.name}");
+                }
+            }
+            else 
+            {
+                Debug.Log("Weapon inventory is empty");
             }
         }
     }
@@ -95,8 +138,25 @@ public class R_Player
             if(collider != null && collider.CompareTag("Weapon")) 
             {
                 tempWeapon = collider.gameObject;
-                // Debug.Log($"Made contact with the {tempWeapon.name}");
                 inRange = true;
+
+                bool foundMatch = false;
+
+                // Iterate through all weapons in w_gameManager
+                foreach (R_Weapon weapon in w_gameManager.allWeapons)
+                {
+                    if(tempWeapon.name == weapon.Name) 
+                    {
+                        foundMatch = true; 
+                        break; 
+                    }
+                }
+
+                if (!foundMatch)
+                {
+                    Debug.Log("Not the same weapon name as the scriptable object");
+                    return false;
+                }
 
                 return true;
             }
@@ -110,15 +170,3 @@ public class R_Player
         return false;
     }
 }
-
-
-        // if(inRange) 
-        // {
-        //     // Execute the commmand to add the weapon
-        //     // Need to find a way on how to pass in the Weapon type as the inventory and as the weapon
-        //     // The inventory cant consist of Weapon since that class is not attached to a weapon
-        //     // So the inventory should be a list of GameObjects
-        //     // But if I pass in only the GameObjects, I can't determine what type of weapon it is
-        //     // And if I can't do that then there are also no attacks or whatsover linked with that weapon
-        //     // Since its only a GameObject without the Weapon class
-        // }

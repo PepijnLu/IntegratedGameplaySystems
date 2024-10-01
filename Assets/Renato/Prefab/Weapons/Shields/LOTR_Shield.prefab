@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7112928517465140405}
   - component: {fileID: -3498147070140553878}
   m_Layer: 0
-  m_Name: Shield
+  m_Name: LOTR_Shield
   m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

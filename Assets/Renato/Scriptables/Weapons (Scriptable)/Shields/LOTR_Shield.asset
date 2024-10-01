@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: LOTR_Shield
   m_EditorClassIdentifier: 
   weapon: {fileID: 4192108342702082948, guid: 6f947ea93e136e9438ad51370e8849a3, type: 3}
-  Name: LOTR_Shield
+  icon: {fileID: 0}
+  name: LOTR_Shield
   isActive: 0
   isAttacking: 0
   attackRate: 2

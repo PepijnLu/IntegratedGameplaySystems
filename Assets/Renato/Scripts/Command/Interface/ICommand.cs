@@ -2,8 +2,8 @@ using UnityEngine;
 
 public interface ICommand
 {
-    void Execute();
-    void Undo();
+    abstract void Execute();
+    abstract void Undo();
 }
 
 public class KeyCommand 
@@ -16,3 +16,19 @@ public interface IAxisCommand
 {
     float GetAxisValue();
 }
+
+public interface IIdentifiable
+{
+    string Name { get; }
+}
+
+// public class NamableGameObject : INamable
+// {
+//     public GameObject GameObject { get; private set; }
+//     public string Name => GameObject.name;
+
+//     public NamableGameObject(GameObject gameObject)
+//     {
+//         GameObject = gameObject;
+//     }
+// }

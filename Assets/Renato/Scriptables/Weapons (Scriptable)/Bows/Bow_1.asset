@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Bow_1
   m_EditorClassIdentifier: 
   weapon: {fileID: 191779944533527622, guid: 3bcfa021cc5f92c4caff852f124bddbe, type: 3}
-  Name: Bow_1
+  icon: {fileID: 0}
+  name: Bow_1
   isActive: 0
   isAttacking: 0
   attackRate: 2

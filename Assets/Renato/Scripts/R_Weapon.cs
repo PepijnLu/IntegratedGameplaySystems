@@ -2,21 +2,31 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Weapon")]
-public class R_Weapon : ScriptableObject
+public class R_Weapon : ScriptableObject, IIdentifiable
 {
     public GameObject weapon;
     public Image icon;
-    public string Name = "";
+    public new string name = "";
+    
+    public string Name 
+    {
+        get => name;
+        private set => name = value;
+    }
+
     public bool isActive = false;
     public bool isAttacking = false;
     public float attackRate = 2f;
     public float nextTimeToAttack = 0f;
 
-    public void Spawn(Transform _position) 
+    public void Instantiate(Transform _position) 
     {    
         GameObject newWeapon = Instantiate(weapon, _position.position, weapon.transform.rotation);
+        newWeapon.name = Name;
         newWeapon.transform.SetParent(_position);
     }
+}
+
 
 
 
@@ -50,4 +60,3 @@ public class R_Weapon : ScriptableObject
 
     //     return false;
     // }
-}
