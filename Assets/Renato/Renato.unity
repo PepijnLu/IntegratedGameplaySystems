@@ -618,7 +618,7 @@ MonoBehaviour:
     weaponInventory: []
     dictionaryEntries: []
   uIManager:
-    UI_Inventory: {fileID: 1836642758}
+    UI_Inventory: {fileID: 0}
     slotPrefab: {fileID: 741894313458692994, guid: 661fbaf7dfcd5744eaa2640d1ca0b96a, type: 3}
     UI_Slots: []
 --- !u!4 &757970604

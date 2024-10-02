@@ -76,7 +76,6 @@ public class AddCommand<T, TIdentifiable> : ICommand where TIdentifiable : IIden
     {
         component.RemoveDictionary(dictionary, key, value);
     }
-
 }
 
 public class SwitchWeaponCommand : ICommand

@@ -7,21 +7,31 @@ public class R_UIManager
 {
     [SerializeField] private GameObject UI_Inventory, slotPrefab;
     [SerializeField] List<GameObject> UI_Slots = new();
+    // [SerializeField] string slotPrefabPath = "IntegratedGameplaySystems/Assets/Renato/Prefab/UI/InventorySlot";
 
     public void InstantiateUISlot(R_Weapon w) 
     {
-        // Get the scriptable object icon
-        // // The scriptable object should have a relation with the weapon
-        // Image icon = w.icon;
-
-        // // Instantiate a new game object
-        // GameObject slot = Instantiate(slotPrefab);
-        // // Transform the new game object under the UI inventory
-        // slot.transform.SetParent(UI_Inventory.transform);
-        // // Add the image component
-        // Image slotIcon = slot.AddComponent<Image>();
-        // // Assign the weapons icon to the image slot
-        // slotIcon.sprite = 
+        Image slotIcon;
+        // GameObject slotPrefab = Resources.Load<GameObject>(slotPrefabPath);
         
+        // Instantiate the loaded prefab
+        GameObject slot = GameObject.Instantiate(slotPrefab);
+
+        // Set parent to UI Inventory
+        slot.transform.SetParent(UI_Inventory.transform, false);
+        
+        // Add an Image component if it doesn't exist
+        if(slot.TryGetComponent<Image>(out var _slotIcon)) 
+        {
+            slotIcon = _slotIcon;
+            slotIcon.sprite = w.icon;
+        }
+        else 
+        {
+            slotIcon = slot.AddComponent<Image>();
+            slotIcon.sprite = w.icon;
+        }
+        
+        UI_Slots.Add(slotIcon.gameObject);
     }
 }

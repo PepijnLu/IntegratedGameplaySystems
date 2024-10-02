@@ -9,6 +9,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
     private readonly List<T> list;
     private readonly T t;
     private WeaponGameManager weaponGameManager;
+    private R_UIManager r_UIManager;
 
     public ConcreteComponentAdd
     (
@@ -27,6 +28,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
     public void CustomAwake() 
     {
         decorator = new();
+        r_UIManager = new();
     }
 
     public void Add() 
@@ -48,7 +50,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
         // Iterate over all objects in allObjList to find a match
         foreach (TValue obj in allObjList)
         {
-            Debug.Log($"Checking object: {obj.Name} against key: {key}"); // Log each comparison
+            Debug.Log($"Checking object: {obj.Name} against key: {key}"); // Log comparison
 
             // Compare the name of the object with the key
             if (obj.Name.Equals(key.ToString(), StringComparison.OrdinalIgnoreCase)) // Case-insensitive comparison
@@ -61,10 +63,12 @@ public class ConcreteComponentAdd<T> : IComponentAdd
 
                 if (existingEntry != null)
                 {
-                    // Update the existing entry's value
                     if (obj is R_Weapon weapon) // Cast obj to R_Weapon
                     {
                         existingEntry.value = weapon; // Assign if casting was successful
+                        weapon.isAdded = true;
+                        r_UIManager.InstantiateUISlot(weapon);
+
                         Debug.Log($"Updated existing entry for key: {key}");
                     }
                     else
@@ -84,6 +88,9 @@ public class ConcreteComponentAdd<T> : IComponentAdd
                         };
                         weaponGameManager.dictionaryEntries.Add(entry); // Add to the list of dictionary entries
                         Debug.Log($"Added new entry for key: {key}");
+                        
+                        newWeapon.isAdded = true;
+                        r_UIManager.InstantiateUISlot(newWeapon);
 
                         // Log the current state of dictionaryEntries
                         Debug.Log("Current dictionary entries:");
@@ -111,105 +118,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
 
         Debug.LogWarning($"No matching object found in allObjList for key: {key}");
     }
-
-    // public void AddDictionary<TValue>(
-    //     Dictionary<string, TValue> dictionary, 
-    //     string key, 
-    //     List<TValue> allObjList
-    // ) where TValue : IIdentifiable
-    // {  
-    //   // Iterate over all objects in allObjList to find a match
-    //     foreach (TValue obj in allObjList)
-    //     {
-    //         // Compare the name of the object with the key
-    //         if (obj.Name.Equals(key.ToString(), StringComparison.OrdinalIgnoreCase)) // Case-insensitive comparison
-    //         {
-    //             decorator.AddToDictionary(dictionary, key, obj);
-    //             // Dictionary entry
-
-    //                 // Check if the entry already exists
-    //                 var existingEntry = weaponGameManager.dictionaryEntries
-    //                 .FirstOrDefault(entry => entry.key.Equals(key, StringComparison.OrdinalIgnoreCase));
-
-    //                 if (existingEntry != null)
-    //                 {
-    //                     // Update the existing entry's value
-    //                     if (obj is R_Weapon weapon) // Cast obj to R_Weapon
-    //                     {
-    //                         existingEntry.value = weapon; // Assign if casting was successful
-    //                         Debug.Log($"Updated existing entry for key: {key}");
-    //                     }
-    //                     else
-    //                     {
-    //                         Debug.LogWarning($"Cannot update existing entry for key: {key}. Obj is not of type R_Weapon.");
-    //                     }
-    //                 }
-    //                 else
-    //                 {
-    //                     // Create a new SerializableDictionaryWeapons entry
-    //                     if (obj is R_Weapon newWeapon) // Cast obj to R_Weapon
-    //                     {
-    //                         var entry = new SerializableDictionary<R_Weapon>
-    //                         {
-    //                             key = key,
-    //                             value = newWeapon 
-    //                         };
-    //                         weaponGameManager.dictionaryEntries.Add(entry); // Add to the list of dictionary entries
-    //                         Debug.Log($"Added new entry for key: {key}");
-
-    //                         // Log the current state of dictionaryEntries
-    //                         Debug.Log("Current dictionary entries:");
-    //                         foreach (var dictEntry in weaponGameManager.dictionaryEntries)
-    //                         {
-    //                             Debug.Log($"Key: {dictEntry.key}, Value: {dictEntry.value}");
-    //                         }
-                            
-    //                     }
-    //                     else
-    //                     {
-    //                         Debug.LogWarning($"Cannot add new entry for key: {key}. Obj is not of type R_Weapon.");
-    //                     }
-    //                 }
-    //             // End
-
-    //             // Log the updated state of the dictionary
-    //             Debug.Log("Updated dictionary state:");
-    //             foreach (var kvp in dictionary)
-    //             {
-    //                 Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
-    //             }
-
-    //             return; // Exit after adding the object
-    //         }
-    //     }
-
-    //     Debug.LogWarning($"No matching object found in allObjList for key: {key}");
-    // }
-
-    // public void AddDictionary<TKey, TValue>
-    // (
-    //     Dictionary<TKey, TValue> dictionary, 
-    //     TKey key, 
-    //     List<TValue> allObjList
-    // ) where TValue : IIdentifiable
-    // {
-    //     // Iterate over all objects in allObjList to find a match
-    //     foreach (TValue obj in allObjList)
-    //     {
-    //         // Compare the name of the object with the key
-    //         if (obj.Name.Equals(key.ToString(), StringComparison.OrdinalIgnoreCase)) // Case-insensitive comparison
-    //         {
-    //             Debug.Log($"object name: {key} == {obj.Name}");
-
-    //             decorator.AddToDictionary(dictionary, key, obj);                
-    //             Debug.Log($"Added '{key}' to dictionary with value: '{obj}'");
-    //             return;
-    //         }
-    //     }
-
-    //     Debug.LogWarning($"No matching object found in allObjList for key: {key}");
-
-    // }
+    
 
     public void RemoveDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value) 
     {

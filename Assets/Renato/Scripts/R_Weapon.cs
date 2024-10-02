@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class R_Weapon : ScriptableObject, IIdentifiable
 {
     public GameObject weapon;
-    public Image icon;
+    public Sprite icon;
     public new string name = "";
     
     public string Name 
@@ -18,6 +18,7 @@ public class R_Weapon : ScriptableObject, IIdentifiable
     public bool isAttacking = false;
     public float attackRate = 2f;
     public float nextTimeToAttack = 0f;
+    public bool isAdded = false;
 
     public void Instantiate(Transform _position) 
     {    
