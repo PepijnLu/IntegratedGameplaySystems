@@ -30,7 +30,7 @@ public class R_GameManager : MonoBehaviour
     void Start()
     {
         player.CustomStart();
-        weaponGameManager.InstantiateWeapons();
+        weaponGameManager.CustomStart();
     }
 
     void Update()
@@ -47,9 +47,18 @@ public class WeaponGameManager
     
     // For the player
     public List<GameObject> weaponInventory = new();
-    public Dictionary<string, IIdentifiable> dictionary = new();
-    
-    
+
+    // public Dictionary<string, IIdentifiable> dictionary = new(); // This is the dictionary I suppose to work with but it doesnt work yet
+    public Dictionary<string, R_Weapon> dictionary = new();
+    [SerializeField] public List<SerializableDictionary<R_Weapon>> dictionaryEntries = new();
+
+    private GameObject newWpn;
+    private R_Weapon r_Weapon;
+
+    public void CustomStart() 
+    {
+        InstantiateWeapons();
+    }
 
     public void InstantiateWeapons() 
     {
@@ -86,4 +95,16 @@ public class WeaponGameManager
             // list[randomIndex] = temp;
         }
     }
+
+    public Dictionary<string, R_Weapon> GetDictionary()
+    {
+        return dictionary;
+    }
+}
+
+[System.Serializable]
+public class SerializableDictionary<T>
+{
+    public string key;
+    public T value;
 }

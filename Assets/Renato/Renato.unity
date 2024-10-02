@@ -600,11 +600,12 @@ MonoBehaviour:
     spawnPoint: {fileID: 1389485540}
   weaponGameManager:
     allWeapons:
+    - {fileID: 11400000, guid: bd5261ed0e02f2944bc77e278d7ce174, type: 2}
+    - {fileID: 11400000, guid: 1bff3daa9e6fb8c44892947a6d44bffe, type: 2}
     - {fileID: 11400000, guid: 9dacfae7cf3bb5846abae8bd0149f591, type: 2}
     - {fileID: 11400000, guid: f9e47587310b6944fbb33a9b04e3f4ed, type: 2}
     - {fileID: 11400000, guid: 3f396857e31280d40b8b84e1b8cdf509, type: 2}
-    - {fileID: 11400000, guid: 1bff3daa9e6fb8c44892947a6d44bffe, type: 2}
-    - {fileID: 11400000, guid: bd5261ed0e02f2944bc77e278d7ce174, type: 2}
+    - {fileID: 11400000, guid: 177d635d0ab0ba6429cfd86aa697a2f8, type: 2}
     spawnPoints:
     - {fileID: 536241213}
     - {fileID: 520243014}
@@ -614,7 +615,8 @@ MonoBehaviour:
     - {fileID: 954045471}
     - {fileID: 1429818692}
     - {fileID: 832176463}
-    weaponInventoryInspector: []
+    weaponInventory: []
+    dictionaryEntries: []
   uIManager:
     UI_Inventory: {fileID: 1836642758}
     slotPrefab: {fileID: 741894313458692994, guid: 661fbaf7dfcd5744eaa2640d1ca0b96a, type: 3}

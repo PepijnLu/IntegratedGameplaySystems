@@ -14,7 +14,7 @@ public class R_InputHandler
             if(Input.GetKeyDown(keyCommand.key)) 
             {
                 keyPressed = true;
-                Debug.Log($"Key input detected: {keyCommand.key}");
+                // Debug.Log($"Key input detected: {keyCommand.key}");
                 UnBindInput(keyCommand.key);
                 return keyCommand.command;
             }
@@ -22,7 +22,7 @@ public class R_InputHandler
             if(Input.GetKeyUp(keyCommand.key)) 
             {
                 keyPressed = false;
-                Debug.Log($"Key input released: {keyCommand.key}");
+                // Debug.Log($"Key input released: {keyCommand.key}");
                 UnBindInput(keyCommand.key);
                 return null;
             }
@@ -40,7 +40,7 @@ public class R_InputHandler
                 keyPressed = true;
                 keyCommand.command.Execute();
 
-                Debug.Log($"Continuous key input detected: {keyCommand.key}");
+                // Debug.Log($"Continuous key input detected: {keyCommand.key}");
             }
 
             if(Input.GetKeyUp(keyCommand.key))  
@@ -48,7 +48,7 @@ public class R_InputHandler
                 keyPressed = false;
                 keyCommand.command.Undo();
 
-                Debug.Log($"Continuous key input released: {keyCommand.key}");
+                // Debug.Log($"Continuous key input released: {keyCommand.key}");
             }
         }
         return null;

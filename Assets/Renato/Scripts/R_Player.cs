@@ -41,27 +41,31 @@ public class R_Player
 
     public void CustomStart() 
     {
-        addCommand = new AddCommand<GameObject>
+        addCommand = new AddCommand<GameObject, R_Weapon>
         (
             w_gameManager.weaponInventory, 
-            // w_gameManager.allWeapons,
-            null, 
-            w_gameManager.dictionary
+            null,
+            w_gameManager.allWeapons,
+            w_gameManager.dictionary,
+            w_gameManager
+            // w_gameManager.dictionary.ToDictionary(kvp => kvp.Key, kvp => (R_Weapon)kvp.Value) // Explicit cast to R_Weapon
         );
 
-        removeCommand = new AddCommand<GameObject>
+        removeCommand = new AddCommand<GameObject, R_Weapon>
         (
             w_gameManager.weaponInventory, 
-            // w_gameManager.allWeapons,
             null,
-            w_gameManager.dictionary 
+            w_gameManager.allWeapons,
+            w_gameManager.dictionary,
+            w_gameManager
+            // w_gameManager.dictionary.ToDictionary(kvp => kvp.Key, kvp => (R_Weapon)kvp.Value) // Explicit cast to R_Weapon
         );
 
         input.BindInputToCommand(KeyCode.E, addCommand);
         input.BindInputToCommand(KeyCode.R, removeCommand);
         
-        Debug.Log($"addCommand initialized: {addCommand != null}");
-        Debug.Log($"removeCommand initialized: {removeCommand != null}");
+        // Debug.Log($"addCommand initialized: {addCommand != null}");
+        // Debug.Log($"removeCommand initialized: {removeCommand != null}");
 
     }
     
@@ -81,18 +85,18 @@ public class R_Player
         {            
             if(input.keyCommands.Find(k => k.key == KeyCode.E)?.command == addCommand) 
             {
-                addCommand = new AddCommand<GameObject>
+                addCommand = new AddCommand<GameObject, R_Weapon>
                 (
                     w_gameManager.weaponInventory, 
-                    // w_gameManager.allWeapons,
-                    tempWeapon, 
-                    w_gameManager.dictionary
+                    tempWeapon,
+                    w_gameManager.allWeapons,
+                    w_gameManager.dictionary,
+                    w_gameManager
+                    // w_gameManager.dictionary.ToDictionary(kvp => kvp.Key, kvp => (R_Weapon)kvp.Value) // Explicit cast to R_Weapon
+
                 );
                 
                 addCommand.Execute();
-                tempWeapon.SetActive(false);
-               
-                // addCommand.AddToDictionary(w_gameManager.weaponDict, namableWeapon.Name, namableWeapon, w_gameManager.weaponInventory.Cast<INamable>().ToList());
             }
         }
 
@@ -102,25 +106,17 @@ public class R_Player
             if (w_gameManager.weaponInventory.Count > 0) 
             {                
                 GameObject weaponToRemove = w_gameManager.weaponInventory[^1];
-                removeCommand = new AddCommand<GameObject>
+                removeCommand = new AddCommand<GameObject, R_Weapon>
                 (
                     w_gameManager.weaponInventory, 
-                    // w_gameManager.allWeapons,
-                    weaponToRemove, 
-                    w_gameManager.dictionary
+                    weaponToRemove,
+                    w_gameManager.allWeapons,
+                    w_gameManager.dictionary,
+                    w_gameManager
+                    // w_gameManager.dictionary.ToDictionary(kvp => kvp.Key, kvp => (R_Weapon)kvp.Value) // Explicit cast to R_Weapon
                 );
 
                 removeCommand.Undo();
-                Debug.Log($"Weapon Inventory Count After Removal: {w_gameManager.weaponInventory.Count}");
-
-                foreach (var weapon in w_gameManager.weaponInventory)
-                {
-                    Debug.Log($"Weapon Name: {weapon.name}, GameObject: {weapon.name}");
-                }
-            }
-            else 
-            {
-                Debug.Log("Weapon inventory is empty");
             }
         }
     }
@@ -147,14 +143,16 @@ public class R_Player
                 {
                     if(tempWeapon.name == weapon.Name) 
                     {
-                        foundMatch = true; 
+                        foundMatch = true;
+
+                         
                         break; 
                     }
                 }
 
                 if (!foundMatch)
                 {
-                    Debug.Log("Not the same weapon name as the scriptable object");
+                    // Debug.Log("Not the same weapon name as the scriptable object");
                     return false;
                 }
 
