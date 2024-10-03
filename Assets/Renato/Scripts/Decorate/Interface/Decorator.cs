@@ -56,7 +56,6 @@ public class ConcreteDecorator : Decorator
         }
     }
 
-
     public override void RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
     {
         if(dictionary.ContainsKey(key))

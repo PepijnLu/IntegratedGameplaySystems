@@ -6,7 +6,7 @@ public class R_GameManager : MonoBehaviour
     // SerializeField
     [SerializeField] private R_Player player;
     [SerializeField] private WeaponGameManager weaponGameManager;
-    [SerializeField] private R_UIManager uIManager;
+    [SerializeField] private R_UIManager r_UIManager;
 
     // Public
 
@@ -21,10 +21,9 @@ public class R_GameManager : MonoBehaviour
     {
         // Player
         playerObj = Instantiate(player.prefab, player.spawnPoint.position, player.spawnPoint.rotation);        
-        player = new(playerObj.transform, 10f, weaponGameManager);
+        player = new(playerObj.transform, 10f, weaponGameManager, r_UIManager);
 
         // UI
-        uIManager = new();
     }
 
     void Start()
@@ -36,30 +35,28 @@ public class R_GameManager : MonoBehaviour
     void Update()
     {
         player.CustomUpdate();
+        r_UIManager.Select(weaponGameManager.weaponInvDict, weaponGameManager);
     }
 }
 
 [System.Serializable]
 public class WeaponGameManager 
 {
-    public List<R_Weapon> allWeapons;
-    public List<Transform> spawnPoints;
-    
-    // For the player
-    public List<GameObject> weaponInventory = new();
-
-    // public Dictionary<string, IIdentifiable> dictionary = new(); // This is the dictionary I suppose to work with but it doesnt work yet
-    public Dictionary<string, R_Weapon> dictionary = new();
-    [SerializeField] public List<SerializableDictionary<R_Weapon>> dictionaryEntries = new();
-
-    private GameObject newWpn;
-    private R_Weapon r_Weapon;
+    [SerializeField] public List<R_Weapon> allWeapons;
+    [SerializeField] public List<Transform> spawnPoints;
+    [SerializeField] public List<SerializableDictionary<R_Weapon>> inventoryEntries = new();
+    [SerializeField] public List<SerializableDictionary<R_Weapon>> usableEntries = new();
+    [SerializeField] public List<GameObject> weaponInventory = new();
+    [SerializeField] public List<R_Weapon> usableWeapons = new();
+    public Dictionary<string, R_Weapon> weaponInvDict = new();
+    public Dictionary<string, R_Weapon> usableWeapnDict = new();
 
     public void CustomStart() 
     {
         InstantiateWeapons();
     }
 
+    // Instantiates weapons at the start of the game
     public void InstantiateWeapons() 
     {
         if(allWeapons == null || spawnPoints == null 
@@ -81,6 +78,7 @@ public class WeaponGameManager
         }
     }
 
+    // Shuffles the list
     private void ShuffleList<T>(List<T> list)
     {
         for (int i = 0; i < list.Count; i++)
@@ -94,11 +92,6 @@ public class WeaponGameManager
             // list[i] = list[randomIndex];
             // list[randomIndex] = temp;
         }
-    }
-
-    public Dictionary<string, R_Weapon> GetDictionary()
-    {
-        return dictionary;
     }
 }
 

@@ -17,18 +17,14 @@ public interface IAxisCommand
     float GetAxisValue();
 }
 
+
+/// <summary>
+/// Interface for ScriptableObjects
+/// </summary>
 public interface IIdentifiable
 {
     string Name { get; }
+    Sprite Icon { get; }
+    bool IsAdded { set; }
 }
 
-// public class NamableGameObject : INamable
-// {
-//     public GameObject GameObject { get; private set; }
-//     public string Name => GameObject.name;
-
-//     public NamableGameObject(GameObject gameObject)
-//     {
-//         GameObject = gameObject;
-//     }
-// }

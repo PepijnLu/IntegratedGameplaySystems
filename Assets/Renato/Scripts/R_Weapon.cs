@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Weapon")]
 public class R_Weapon : ScriptableObject, IIdentifiable
@@ -7,6 +6,12 @@ public class R_Weapon : ScriptableObject, IIdentifiable
     public GameObject weapon;
     public Sprite icon;
     public new string name = "";
+    
+    public Sprite Icon 
+    {
+        get => icon;
+        private set => icon = value;
+    }
     
     public string Name 
     {
@@ -18,7 +23,15 @@ public class R_Weapon : ScriptableObject, IIdentifiable
     public bool isAttacking = false;
     public float attackRate = 2f;
     public float nextTimeToAttack = 0f;
+
+    public bool IsAdded 
+    {
+        get => isAdded;
+        set => isAdded = value;
+    }
+    
     public bool isAdded = false;
+    public bool selected = false;
 
     public void Instantiate(Transform _position) 
     {    
@@ -27,37 +40,3 @@ public class R_Weapon : ScriptableObject, IIdentifiable
         newWeapon.transform.SetParent(_position);
     }
 }
-
-
-
-
-
-    // Might use this method for other purposes
-    // public bool InRange()
-    // {
-    //     // Get the collider from the weapon
-    //     if (weapon.TryGetComponent<CircleCollider2D>(out var collider)) return false;
-
-    //     // Do something
-    //     Collider2D hitCollider = Physics2D.OverlapCircle(weapon.transform.position, collider.radius);
-    //     if (hitCollider != null)
-    //     {
-    //         Debug.Log($"Made contact with: {hitCollider.name}");
-    //         return true;
-    //     }
-
-    //     if (!hitCollider.CompareTag("Player"))
-    //     {
-    //         Transform player = hitCollider.transform;
-
-    //         if (player != null)
-    //         {
-    //             Debug.Log($"Made contact with the {player.gameObject.name}");
-    //             return true;
-    //         }
-
-    //         return false;
-    //     }
-
-    //     return false;
-    // }
