@@ -614,14 +614,19 @@ MonoBehaviour:
     - {fileID: 954045471}
     - {fileID: 1429818692}
     - {fileID: 832176463}
+    inventoryEntries: []
+    usableEntries: []
     weaponInventory: []
-    weaponDictionaryEntries: []
+    usableWeapons: []
   r_UIManager:
-    UI_Inv: {fileID: 1875265195769455808}
-    UI_SlotsList: []
-    UISlotDictionaryEntries: []
-    slotPrefabPath: InventorySlot
+    weaponInventoryUI: {fileID: 1875265195769455808}
+    slotDictionaryEntry: []
+    selectedSlot: []
+    slotListUI: []
+    usableWeaponsUI: []
+    isPanelBeingUpdated: 0
     slotPrefab: {fileID: 0}
+    slotPrefabPath: InventorySlot
 --- !u!4 &757970604
 Transform:
   m_ObjectHideFlags: 0
@@ -961,12 +966,12 @@ GameObject:
   - component: {fileID: 5948123523204462141}
   - component: {fileID: 7750509778645058913}
   m_Layer: 5
-  m_Name: UI_Inventory
+  m_Name: WeaponInventoryUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3423600649309367816
 RectTransform:
   m_ObjectHideFlags: 0

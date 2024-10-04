@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ConcreteComponentAdd<T> : IComponentAdd
 {
-    private ConcreteDecorator decorator;
+    private ConcreteDecoratorAdd decorator;
     private readonly List<T> list;
     private readonly T t;
 

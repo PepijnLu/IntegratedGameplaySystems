@@ -3,7 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Weapon")]
 public class R_Weapon : ScriptableObject, IIdentifiable
 {
-    public GameObject weapon;
+    public GameObject weaponPrefab;
+    public GameObject currentWeapon;
     public Sprite icon;
     public new string name = "";
     
@@ -35,8 +36,9 @@ public class R_Weapon : ScriptableObject, IIdentifiable
 
     public void Instantiate(Transform _position) 
     {    
-        GameObject newWeapon = Instantiate(weapon, _position.position, weapon.transform.rotation);
+        GameObject newWeapon = Instantiate(weaponPrefab, _position.position, weaponPrefab.transform.rotation);
         newWeapon.name = Name;
         newWeapon.transform.SetParent(_position);
+        currentWeapon = newWeapon;
     }
 }

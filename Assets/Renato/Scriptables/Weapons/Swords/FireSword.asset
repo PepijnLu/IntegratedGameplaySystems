@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f97649b1a7cdfd4d925528eccaa5095, type: 3}
   m_Name: FireSword
   m_EditorClassIdentifier: 
-  weapon: {fileID: 747030252379573556, guid: 4f342264fb0b18547a2b3de64d3eafab, type: 3}
+  weaponPrefab: {fileID: 747030252379573556, guid: 4f342264fb0b18547a2b3de64d3eafab, type: 3}
+  currentWeapon: {fileID: 0}
   icon: {fileID: 21300000, guid: 6b004e0bbad41114ab63129d35a086ef, type: 3}
   name: FireSword
   isActive: 0
@@ -20,3 +21,4 @@ MonoBehaviour:
   attackRate: 2
   nextTimeToAttack: 0
   isAdded: 0
+  selected: 0

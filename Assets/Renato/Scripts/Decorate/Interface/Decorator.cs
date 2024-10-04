@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-public abstract class Decorator
+public abstract class DecoratorAdd
 {
     public abstract void AddToList<T>(List<T> list, T item);
     public abstract void RemoveFromList<T>(List<T> list, T item);
@@ -9,7 +9,7 @@ public abstract class Decorator
     public abstract void RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value);
 }
 
-public class ConcreteDecorator : Decorator
+public class ConcreteDecoratorAdd : DecoratorAdd
 {
     public override void AddToList<T>(List<T> list, T item)
     {

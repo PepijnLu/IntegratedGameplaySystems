@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f97649b1a7cdfd4d925528eccaa5095, type: 3}
   m_Name: Spear_1
   m_EditorClassIdentifier: 
-  weapon: {fileID: 6187300791812268890, guid: 12ba9d115ce7ef64b85b9497c6e2ebc6, type: 3}
+  weaponPrefab: {fileID: 6187300791812268890, guid: 12ba9d115ce7ef64b85b9497c6e2ebc6, type: 3}
+  currentWeapon: {fileID: 0}
   icon: {fileID: 21300000, guid: d5ca112575051f94f87e1449a3d2a608, type: 3}
   name: Spear_1
   isActive: 0
@@ -20,3 +21,4 @@ MonoBehaviour:
   attackRate: 2
   nextTimeToAttack: 0
   isAdded: 0
+  selected: 0

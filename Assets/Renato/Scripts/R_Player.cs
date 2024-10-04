@@ -16,21 +16,23 @@ public class R_Player
 
     // Private
     private R_InputHandler input; // Key input
-    private ICommand addCommand, removeCommand, HUDCommand;
+    private ICommand addCommand, removeCommand, addToInvCommandUI, openInvCommandUI, selectCommand;
     public IComponentAdd componentAdd;
     
     // Private readonly
-    private readonly WeaponGameManager w_gameManager;
+    private readonly R_WeaponsManager w_gameManager;
     private readonly R_UIManager r_UIManager;
     private readonly Transform transform; // Player's transform
     private readonly float movementSpeed;
+
+    private bool isInventoryOpen;
  
     // Constructor
     public R_Player
     (
         Transform transform, 
         float movementSpeed, 
-        WeaponGameManager w_gameManager,
+        R_WeaponsManager w_gameManager,
         R_UIManager r_UIManager
     ) 
     {
@@ -41,8 +43,6 @@ public class R_Player
 
         CustomAwake();
     }
-
-    public R_Player(){}
 
     public void CustomAwake() 
     {
@@ -62,20 +62,28 @@ public class R_Player
             w_gameManager.weaponInventory, 
             null
         );
-
+        
         componentAdd = new ConcreteComponentAdd<GameObject>(w_gameManager.weaponInventory, null);
+        openInvCommandUI = new OpenInventoryCommandUI(r_UIManager.weaponInventoryUI);
+
+        selectCommand = new SelectWeaponCommand
+        (
+            r_UIManager.slotDictionaryEntry,                // Class entry to store the values from the dictionary            
+            r_UIManager.slotDictionaryUI,                   // Dictionary to store the UI slots
+            w_gameManager.weaponInvDictionary,              // Dictionary that stores the weapons from the inventory
+            r_UIManager.selectedSlot,                       // Slot of selected weapons
+            r_UIManager.slotListUI,                         // List to store UI slots in
+            r_UIManager.usableWeaponsUI,                    // List of usable weapons
+            w_gameManager,                                  // WeaponGameManager class
+            r_UIManager.slotPrefab                          // Placeholder for the UI slot prefab
+        );
     } 
 
     public void CustomStart() 
     {
         input.BindInputToCommand(KeyCode.E, addCommand);
         input.BindInputToCommand(KeyCode.R, removeCommand);
-        
-        // Debug.Log($"addCommand initialized: {addCommand != null}");
-        // Debug.Log($"removeCommand initialized: {removeCommand != null}");
-        Debug.Log($"componentAdd initialized: {componentAdd != null}");
-
-
+        input.BindInputToCommand(KeyCode.Tab, openInvCommandUI);
     }
     
     public void CustomUpdate() 
@@ -110,7 +118,7 @@ public class R_Player
                 // Add to dictionary
                 var addedWeapon = componentAdd.AddToDictionary
                 (
-                    w_gameManager.weaponInvDict,                // Weapon's inventory dictionary
+                    w_gameManager.weaponInvDictionary,          // Weapon's inventory dictionary
                     tempWeapon.name,                            // Weapon game object name
                     w_gameManager.allWeapons,                   // List of Weapon class
                     w_gameManager.inventoryEntries              // Serializable class that hold the keys and values of the dictionary
@@ -119,20 +127,20 @@ public class R_Player
                 // Add to UI
                 if(addedWeapon is IIdentifiable identifiable) 
                 {
-                    HUDCommand = new AddToHUDCommand<IIdentifiable>
+                    addToInvCommandUI = new AddToInventoryCommandUI<IIdentifiable>
                     (
-                        r_UIManager.UISlotDictionaryEntries,    // Serializable class that hold the keys and values of the dictionary
-                        r_UIManager.UI_SlotsDict,               // Dictionary for the UI slots
-                        r_UIManager.UI_SlotsList,               // List for the UI slots
-                        r_UIManager.UI_Inv,                     // Inventory for UI slots as a game object
+                        r_UIManager.slotDictionaryEntry,        // Serializable class that hold the keys and values of the dictionary
+                        r_UIManager.slotDictionaryUI,           // Dictionary for the UI slots
+                        r_UIManager.slotListUI,                 // List for the UI slots
+                        r_UIManager.weaponInventoryUI,          // Inventory for UI slots as a game object
                         r_UIManager.slotPrefabPath,             // Path to the prefab (resources)
                         identifiable,                           // Is addedWeapon
-                        r_UIManager.slotPrefab
+                        r_UIManager.slotPrefab                  // Placeholder for the UI slot prefab
                     );
                 }
 
                 // Add to UI inventory
-                HUDCommand.Execute();
+                addToInvCommandUI.Execute();
 
             }
         }
@@ -151,6 +159,13 @@ public class R_Player
 
                 removeCommand.Undo();
             }
+        }
+
+        OpenInventoryUI(input);
+
+        if(isInventoryOpen) 
+        {
+            selectCommand.Execute();
         }
     }
 
@@ -199,5 +214,28 @@ public class R_Player
         }
 
         return false;
+    }
+
+    public void OpenInventoryUI(R_InputHandler input) 
+    {
+        // Check if the Tab key is pressed
+        if (input.keyCommands.Find(k => k.key == KeyCode.Tab)?.command == addCommand) 
+        {
+            // Check if the inventory is currently open
+            if (openInvCommandUI != null && r_UIManager.weaponInventoryUI.activeInHierarchy) 
+            {
+                // If the inventory is open, close it
+                Debug.Log("Closing inventory with Tab");
+                openInvCommandUI.Undo(); // Close inventory
+                isInventoryOpen = false;
+            }
+            else 
+            {
+                // If the inventory is not open, open it
+                Debug.Log("Opening inventory with Tab");
+                openInvCommandUI.Execute(); // Open inventory
+                isInventoryOpen = true;
+            }
+        }
     }
 }

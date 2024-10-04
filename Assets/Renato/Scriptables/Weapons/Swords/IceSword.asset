@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f97649b1a7cdfd4d925528eccaa5095, type: 3}
   m_Name: IceSword
   m_EditorClassIdentifier: 
-  weapon: {fileID: 8065828454769501257, guid: e8ab1df87c1c5c7438b37370188e4aa4, type: 3}
+  weaponPrefab: {fileID: 8065828454769501257, guid: e8ab1df87c1c5c7438b37370188e4aa4, type: 3}
+  currentWeapon: {fileID: 0}
   icon: {fileID: 21300000, guid: 9298a640c983dd54298f9fc0e9b12a78, type: 3}
   name: IceSword
   isActive: 0
@@ -20,3 +21,4 @@ MonoBehaviour:
   attackRate: 2
   nextTimeToAttack: 0
   isAdded: 0
+  selected: 0
