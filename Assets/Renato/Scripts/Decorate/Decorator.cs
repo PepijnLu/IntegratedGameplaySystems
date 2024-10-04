@@ -6,7 +6,7 @@ public abstract class DecoratorAdd
     public abstract void AddToList<T>(List<T> list, T item);
     public abstract void RemoveFromList<T>(List<T> list, T item);
     public abstract void AddToDictionary<TValue>(Dictionary<string, TValue> dictionary, string key, TValue value);
-    public abstract void RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value);
+    public abstract void RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key);
 }
 
 public class ConcreteDecoratorAdd : DecoratorAdd
@@ -48,15 +48,10 @@ public class ConcreteDecoratorAdd : DecoratorAdd
         if(!dictionary.ContainsKey(key)) 
         {
             dictionary.Add(key, value);
-            Debug.Log($"Added '{key}' to dictionary. Message from Decorator class");
-        }
-        else
-        {
-            Debug.Log($"Dictionary already contains key: {key}. Not adding. Message from Decorator class");
         }
     }
 
-    public override void RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    public override void RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key)
     {
         if(dictionary.ContainsKey(key))
         {

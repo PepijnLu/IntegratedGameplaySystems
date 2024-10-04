@@ -36,6 +36,12 @@ public class ConcreteComponentAdd<T> : IComponentAdd
         decorator.RemoveFromList(list, t);
     }
 
+    public TValue RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value) 
+    {
+        decorator.RemoveFromDictionary(dictionary, key);
+        return value;
+    }
+
     public TValue AddToDictionary<TValue>
     (
         Dictionary<string, TValue> dictionary, 
@@ -73,7 +79,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
                 if (existingEntry != null)
                 {
                     existingEntry.value = obj;
-                    Debug.Log($"Updated existing entry for key: {key}");
+                    // Debug.Log($"Updated existing entry for key: {key}");
                 }
                 else
                 {
@@ -84,7 +90,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
                     };
 
                     serializableDictionary.Add(newEntry);
-                    Debug.Log($"Added new entry for key: {key}");
+                    // Debug.Log($"Added new entry for key: {key}");
                 }
 
                 return obj;
@@ -93,12 +99,6 @@ public class ConcreteComponentAdd<T> : IComponentAdd
 
         Debug.LogWarning($"No matching object found in allObjList for key: {key}");
         return default;
-    }
-
-
-    public void RemoveDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value) 
-    {
-        decorator.RemoveFromDictionary(dictionary, key, value);
     }
 }
 

@@ -68,14 +68,9 @@ public class R_Player
 
         selectCommand = new SelectWeaponCommand
         (
-            r_UIManager.slotDictionaryEntry,                // Class entry to store the values from the dictionary            
-            r_UIManager.slotDictionaryUI,                   // Dictionary to store the UI slots
-            w_gameManager.weaponInvDictionary,              // Dictionary that stores the weapons from the inventory
-            r_UIManager.selectedSlot,                       // Slot of selected weapons
-            r_UIManager.slotListUI,                         // List to store UI slots in
-            r_UIManager.usableWeaponsUI,                    // List of usable weapons
-            w_gameManager,                                  // WeaponGameManager class
-            r_UIManager.slotPrefab                          // Placeholder for the UI slot prefab
+            r_UIManager.selectedSlot,       // Slot of selected weapons
+            w_gameManager,                  // Weapon game manager class
+            r_UIManager                     // UI manager class
         );
     } 
 
@@ -111,10 +106,6 @@ public class R_Player
                 // Add to list
                 addCommand.Execute();
 
-                // var weaponInvDictAsRWeapon = w_gameManager.weaponInvDict
-                // .Where(kvp => kvp.Value is R_Weapon)
-                // .ToDictionary(kvp => kvp.Key, kvp => (R_Weapon)kvp.Value);
-
                 // Add to dictionary
                 var addedWeapon = componentAdd.AddToDictionary
                 (
@@ -146,20 +137,22 @@ public class R_Player
         }
 
         // Removing the weapon if the player has weapons in their inventory
-        if(input.keyCommands.Find(k => k.key == KeyCode.R)?.command == addCommand) 
-        {
-            if (w_gameManager.weaponInventory.Count > 0) 
-            {                
-                GameObject weaponToRemove = w_gameManager.weaponInventory[^1];
-                removeCommand = new AddToListCommand<GameObject, R_Weapon>
-                (
-                    w_gameManager.weaponInventory,            // Weapon inventory
-                    weaponToRemove                            // Weapon to remove from the inventory
-                );
+        // if(input.keyCommands.Find(k => k.key == KeyCode.R)?.command == addCommand) 
+        // {
+        //     if (w_gameManager.weaponInventory.Count > 0) 
+        //     {                
+        //         GameObject weaponToRemove = w_gameManager.weaponInventory[^1];
+        //         removeCommand = new AddToListCommand<GameObject, R_Weapon>
+        //         (
+        //             w_gameManager.weaponInventory,            // Weapon inventory
+        //             weaponToRemove                            // Weapon to remove from the inventory
+        //         );
 
-                removeCommand.Undo();
-            }
-        }
+        //         removeCommand.Undo();
+
+        //         // componentAdd.RemoveDictionary(w_gameManager.weaponInvDictionary, tempWeapon.name);
+        //     }
+        // }
 
         OpenInventoryUI(input);
 
@@ -200,7 +193,6 @@ public class R_Player
 
                 if (!foundMatch)
                 {
-                    // Debug.Log("Not the same weapon name as the scriptable object");
                     return false;
                 }
 
@@ -225,14 +217,12 @@ public class R_Player
             if (openInvCommandUI != null && r_UIManager.weaponInventoryUI.activeInHierarchy) 
             {
                 // If the inventory is open, close it
-                Debug.Log("Closing inventory with Tab");
                 openInvCommandUI.Undo(); // Close inventory
                 isInventoryOpen = false;
             }
             else 
             {
                 // If the inventory is not open, open it
-                Debug.Log("Opening inventory with Tab");
                 openInvCommandUI.Execute(); // Open inventory
                 isInventoryOpen = true;
             }

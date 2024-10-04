@@ -40,5 +40,11 @@ public class R_Weapon : ScriptableObject, IIdentifiable
         newWeapon.name = Name;
         newWeapon.transform.SetParent(_position);
         currentWeapon = newWeapon;
+
+        selected = false;
+        isAdded = false;
+        isActive = false;
+        isAttacking = false;
+        nextTimeToAttack = 0f;
     }
 }

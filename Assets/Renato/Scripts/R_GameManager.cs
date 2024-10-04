@@ -43,15 +43,20 @@ public class R_GameManager : MonoBehaviour
 
 public class R_WeaponsManager 
 {
+    [Header("Game Management")]
     [SerializeField] public List<R_Weapon> allWeapons;
     [SerializeField] public List<Transform> spawnPoints;
-    [SerializeField] public List<SerializableDictionary<R_Weapon>> inventoryEntries = new();
-    [SerializeField] public List<SerializableDictionary<R_Weapon>> usableEntries = new();
-    [SerializeField] public List<GameObject> weaponInventory = new();
-    [SerializeField] public List<R_Weapon> usableWeapons = new();
-    public Dictionary<string, R_Weapon> weaponInvDictionary = new();
-    public Dictionary<string, R_Weapon> usableWeapnDictionary = new();
 
+    [Header("Weapons Inventory")]
+    [SerializeField] public List<GameObject> weaponInventory = new();
+    [SerializeField] public List<SerializableDictionary<R_Weapon>> inventoryEntries = new();
+    public Dictionary<string, R_Weapon> weaponInvDictionary = new();
+
+    [Header("Usable Weapons Inventory")]
+    [SerializeField] public List<R_Weapon> usableWeapons = new();
+    [SerializeField] public List<SerializableDictionary<R_Weapon>> usableEntries = new();
+    public Dictionary<string, R_Weapon> usableWeapnDictionary = new();
+    
     public void CustomStart() 
     {
         InstantiateWeapons();
@@ -99,18 +104,25 @@ public class R_WeaponsManager
 [System.Serializable]
 public class R_UIManager
 {
+    [Header("Weapons Inventory")]
     [SerializeField] public GameObject weaponInventoryUI; // UI inventory
     [SerializeField] public List<SerializableDictionary<GameObject>> slotDictionaryEntry = new(); // Class entry to store the values from the dictionary
     public Dictionary<string, GameObject> slotDictionaryUI = new(); // Dictionary to store the UI slots
-    [SerializeField] public List<R_Weapon> selectedSlot = new();
     [SerializeField] public List<GameObject> slotListUI = new(); // List to store UI slots in (need it in order to add it into the dictionary)
-    [SerializeField] public List<GameObject> usableWeaponsUI = new();
-    [SerializeField] private bool isPanelBeingUpdated = false;
 
+    [Header("Usable Weapons Inventory")]
+    [SerializeField] public GameObject usableInventoryUI; // Usable UI inventory
+    [SerializeField] public List<GameObject> usableWeaponsUI = new();
+    [SerializeField] public List<R_Weapon> selectedSlot = new();
+    
     [HideInInspector] public GameObject slotPrefab; // This is just a placeholder for the slotPrefabPath
     [HideInInspector] public string slotPrefabPath = "InventorySlot"; // Path to the UI slot to instantiate
 }
 
+/// <summary>
+/// This class is meant to store the keys and values from a dictionary
+/// </summary>
+/// <typeparam name="T"></typeparam>
 [System.Serializable]
 public class SerializableDictionary<T>
 {
