@@ -14,7 +14,7 @@ public class KeyCommand
 
 public interface IAxisCommand 
 {
-    float GetAxisValue();
+    abstract float GetAxisValue();
 }
 
 

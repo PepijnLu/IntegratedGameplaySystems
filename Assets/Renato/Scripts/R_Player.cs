@@ -72,6 +72,16 @@ public class R_Player
             w_gameManager,                  // Weapon game manager class
             r_UIManager                     // UI manager class
         );
+
+
+        addToInvCommandUI = new AddToInventoryCommandUI<IIdentifiable>
+        (
+            w_gameManager,
+            r_UIManager,
+            r_UIManager.slotPrefabPath,             // Path to the prefab (resources)
+            null                                    // Is addedWeapon
+        );
+        
     } 
 
     public void CustomStart() 
@@ -120,19 +130,15 @@ public class R_Player
                 {
                     addToInvCommandUI = new AddToInventoryCommandUI<IIdentifiable>
                     (
-                        r_UIManager.slotDictionaryEntry,        // Serializable class that hold the keys and values of the dictionary
-                        r_UIManager.slotDictionaryUI,           // Dictionary for the UI slots
-                        r_UIManager.slotListUI,                 // List for the UI slots
-                        r_UIManager.weaponInventoryUI,          // Inventory for UI slots as a game object
+                        w_gameManager,
+                        r_UIManager,
                         r_UIManager.slotPrefabPath,             // Path to the prefab (resources)
-                        identifiable,                           // Is addedWeapon
-                        r_UIManager.slotPrefab                  // Placeholder for the UI slot prefab
+                        identifiable                            // Is addedWeapon
                     );
                 }
 
                 // Add to UI inventory
                 addToInvCommandUI.Execute();
-
             }
         }
 
@@ -159,6 +165,7 @@ public class R_Player
         if(isInventoryOpen) 
         {
             selectCommand.Execute();
+            addToInvCommandUI.Undo();
         }
     }
 

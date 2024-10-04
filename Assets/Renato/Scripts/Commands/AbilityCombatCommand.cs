@@ -9,4 +9,6 @@ public class AbilityCombatCommand : ICommand
     {
         
     }
+
+    public void ExectuteSelect() {}
 }

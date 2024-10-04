@@ -23,11 +23,6 @@ public class SelectWeaponCommand: ICommand
     public void Execute()
     {
         Select(r_UIManager);
-
-        if(selectedSlot.Count == 1) 
-        {
-            OpenSelectPanel(weaponGameManager, r_UIManager);
-        }
     }
 
     public void Undo()
@@ -44,20 +39,24 @@ public class SelectWeaponCommand: ICommand
             string slotName = slot.Key;
             GameObject slotObject = slot.Value;
 
-            // Get the button component
-            Button slotButton = slotObject.GetComponent<Button>();
-            
-            // Remove any previous listeners to avoid duplicate actions
-            slotButton.onClick.RemoveAllListeners();
+            if(slotObject != null) 
+            {
+                // Get the button component
+                if(slotObject.TryGetComponent<Button>(out var slotButton)) 
+                {
+                    // Remove any previous listeners to avoid duplicate actions
+                    slotButton.onClick.RemoveAllListeners();
 
-            // Add a new listener to handle the click event
-            slotButton.onClick.AddListener(() => OnSlotClicked(slotName, weaponGameManager.weaponInvDictionary, r_UIManager));   
+                    // Add a new listener to handle the click event
+                    slotButton.onClick.AddListener(() => OnSlotClicked(slotName, weaponGameManager.weaponInvDictionary, r_UIManager));   
+                }
+            }
         }
     }
 
     private void OnSlotClicked(string slotName, Dictionary<string, R_Weapon> dictionary, R_UIManager r_UIManager) 
     {
-        // Debug.Log($"Clicked on slot: {slotName}");
+        Debug.Log($"Clicked on slot: {slotName}");
 
         // Check if the slot exists in the weapon inventory dictionary
         if (dictionary.TryGetValue(slotName, out R_Weapon w)) 
@@ -102,46 +101,25 @@ public class SelectWeaponCommand: ICommand
         {
             if (slot.name == slotName)
             {
-                // Find the "Select Panel" child object
-                Transform selectPanelTransform = slot.transform.Find("Select Panel");
-                if (selectPanelTransform != null)
+                // Find the "ButtonPanel" child object
+                Transform buttonPanelTransform = slot.transform.Find("ButtonPanel");
+                if (buttonPanelTransform != null)
                 {
-                    GameObject selectPanel = selectPanelTransform.gameObject;
+                    GameObject buttonPanel = buttonPanelTransform.gameObject;
 
                     // Set the active state of the select panel
-                    selectPanel.SetActive(isActive);
-                }
-            }
-        }
-    }
-
-
-    private void OpenSelectPanel(R_WeaponsManager weaponGameManager, R_UIManager r_UIManager) 
-    {
-        foreach (var w in selectedSlot)
-        {
-            foreach (var slot in r_UIManager.slotListUI)
-            {
-                Transform selectPanelTransform = slot.transform.Find("Select Panel");
-                GameObject selectPanel = selectPanelTransform.gameObject;
-
-                if(w.selected) 
-                {
-                    if(w.Name == slot.name) 
+                    buttonPanel.SetActive(isActive);
+                    if(isActive == true) 
                     {
-                        // Add event listener to the button of the selectPanel
-                        if(!selectPanel.TryGetComponent<Button>(out var btn2)) return;
-
-                        btn2.onClick.RemoveAllListeners();
-                        btn2.onClick.AddListener(() => OnAddClick(weaponGameManager, r_UIManager));
+                        Transform specificChild = buttonPanel.transform.GetChild(1);
+                        
+                        if(specificChild.TryGetComponent<Button>(out var btn)) 
+                        {
+                            btn.onClick.AddListener(() => OnAddClick(weaponGameManager, r_UIManager));
+                        }
                     }
                 }
-                else 
-                {
-                    return;
-                }
             }
-            
         }
     }
 
@@ -166,7 +144,7 @@ public class SelectWeaponCommand: ICommand
             // Add it in the list of usable entries
             weaponGameManager.usableEntries.Add(entry);
 
-            // Add the weapon to the usable weapn UI
+            // Add the weapon to the usable weapon UI
             for (int i = 0; i < r_UIManager.slotListUI.Count; i++)
             {
                 GameObject slot = r_UIManager.slotListUI[i];
@@ -218,31 +196,28 @@ public class SelectWeaponCommand: ICommand
 
               
             // // Move the slot to the usable inventory on the canvas
-            if(weaponGameManager.usableWeapons.Count < 2) 
+            if(weaponGameManager.usableWeapons.Count <= 2) 
             {
                 DeactivateSelectPanels(r_UIManager);
             }
-
-            w.selected = false;
-            selectedSlot.Remove(w);
         }
     }
 
+
     private void DeactivateSelectPanels(R_UIManager r_UIManager)
     {
-        foreach (var item in r_UIManager.usableWeaponsUI)
+        foreach (GameObject item in r_UIManager.usableWeaponsUI)
         {
             Debug.Log($"Processing UI item for deactivation: {item.name}");
 
-            Transform selectPanelTransform = item.transform.Find("Select Panel");
+            Transform selectPanelTransform = item.transform.Find("ButtonPanel");
             if (selectPanelTransform != null)
             {
                 selectPanelTransform.gameObject.SetActive(false);
                 Debug.Log($"Deactivated Select Panel for: {item.name}");
 
                 // Remove listeners to avoid conflicts
-                Button btn = item.GetComponent<Button>();
-                if (btn != null)
+                if (item.TryGetComponent<Button>(out var btn))
                 {
                     btn.onClick.RemoveAllListeners();
                 }
