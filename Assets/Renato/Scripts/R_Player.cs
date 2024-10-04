@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Diagnostics;
 using UnityEngine;
 
 [System.Serializable]
@@ -16,7 +16,12 @@ public class R_Player
 
     // Private
     private R_InputHandler input; // Key input
-    private ICommand addCommand, removeCommand, addToInvCommandUI, openInvCommandUI, selectCommand;
+
+    [Header("Commands")]
+    private ICommand addCommand, removeCommand;
+    private ICommand addToInvCommandUI, openInvCommandUI;
+    private ICommand selectCommand;
+    private ICommand switchWeaponCommand;
     public IComponentAdd componentAdd;
     
     // Private readonly
@@ -81,7 +86,11 @@ public class R_Player
             r_UIManager.slotPrefabPath,             // Path to the prefab (resources)
             null                                    // Is addedWeapon
         );
-        
+
+        switchWeaponCommand = new SwapWeaponCommand 
+        (
+            w_gameManager
+        );
     } 
 
     public void CustomStart() 
@@ -89,6 +98,7 @@ public class R_Player
         input.BindInputToCommand(KeyCode.E, addCommand);
         input.BindInputToCommand(KeyCode.R, removeCommand);
         input.BindInputToCommand(KeyCode.Tab, openInvCommandUI);
+        input.BindInputToCommand(KeyCode.Q, switchWeaponCommand);
     }
     
     public void CustomUpdate() 
@@ -142,24 +152,11 @@ public class R_Player
             }
         }
 
-        // Removing the weapon if the player has weapons in their inventory
-        // if(input.keyCommands.Find(k => k.key == KeyCode.R)?.command == addCommand) 
-        // {
-        //     if (w_gameManager.weaponInventory.Count > 0) 
-        //     {                
-        //         GameObject weaponToRemove = w_gameManager.weaponInventory[^1];
-        //         removeCommand = new AddToListCommand<GameObject, R_Weapon>
-        //         (
-        //             w_gameManager.weaponInventory,            // Weapon inventory
-        //             weaponToRemove                            // Weapon to remove from the inventory
-        //         );
-
-        //         removeCommand.Undo();
-
-        //         // componentAdd.RemoveDictionary(w_gameManager.weaponInvDictionary, tempWeapon.name);
-        //     }
-        // }
-
+        if(input.keyCommands.Find(k => k.key == KeyCode.Q)?.command == addCommand) 
+        {
+            switchWeaponCommand.Execute();
+        }
+       
         OpenInventoryUI(input);
 
         if(isInventoryOpen) 

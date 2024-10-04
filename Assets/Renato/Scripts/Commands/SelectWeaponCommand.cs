@@ -70,20 +70,20 @@ public class SelectWeaponCommand: ICommand
                 // If a weapon was previously selected, deselect it
                 if (previousW != null) 
                 {
-                    previousW.selected = false;
+                    previousW.isSelectedInInventory = false;
                     selectedSlot.Remove(previousW);  // Remove previous weapon from selection
                     SetSelectPanelActive(previousW.Name, false, r_UIManager);
                 }
 
                 // Add the new weapon to the selected slot and mark it as selected
                 selectedSlot.Add(w);
-                w.selected = true;
+                w.isSelectedInInventory = true;
                 SetSelectPanelActive(slotName, true, r_UIManager);
             }
             else
             {
                 // If the weapon is already selected, deselect it
-                w.selected = false;
+                w.isSelectedInInventory = false;
                 selectedSlot.Remove(w);
                 SetSelectPanelActive(slotName, false, r_UIManager);
             }
@@ -132,7 +132,7 @@ public class SelectWeaponCommand: ICommand
         if (!weaponGameManager.usableWeapons.Contains(w) && weaponGameManager.usableWeapons.Count < 2) 
         {
             weaponGameManager.usableWeapons.Add(w);
-            weaponGameManager.usableWeapnDictionary.Add(w.Name, w); 
+            weaponGameManager.usableWeaponDictionary.Add(w.Name, w); 
                
             // Create a new entry point for the dictionary
             var entry = new SerializableDictionary<R_Weapon> 
@@ -201,6 +201,11 @@ public class SelectWeaponCommand: ICommand
                 DeactivateSelectPanels(r_UIManager);
             }
         }
+
+        w.isSelectedInInventory = false;
+        selectedSlot.Clear();
+
+        weaponGameManager.usableWeapons[0].isSelectedInUsable = true;
     }
 
 

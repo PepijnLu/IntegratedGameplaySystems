@@ -55,7 +55,12 @@ public class R_WeaponsManager
     [Header("Usable Weapons Inventory")]
     [SerializeField] public List<R_Weapon> usableWeapons = new();
     [SerializeField] public List<SerializableDictionary<R_Weapon>> usableEntries = new();
-    public Dictionary<string, R_Weapon> usableWeapnDictionary = new();
+    public Dictionary<string, R_Weapon> usableWeaponDictionary = new();
+    // public R_Weapon activeWeapon;
+    // public GameObject activeGameObjectWeapon;
+
+
+    public List<R_Weapon> activeWeapon = new();
     
     public void CustomStart() 
     {

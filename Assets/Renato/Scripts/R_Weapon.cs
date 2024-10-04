@@ -32,7 +32,8 @@ public class R_Weapon : ScriptableObject, IIdentifiable
     }
     
     public bool isAdded = false;
-    public bool selected = false;
+    public bool isSelectedInInventory = false;
+    public bool isSelectedInUsable = false;
 
     public void Instantiate(Transform _position) 
     {    
@@ -41,7 +42,8 @@ public class R_Weapon : ScriptableObject, IIdentifiable
         newWeapon.transform.SetParent(_position);
         currentWeapon = newWeapon;
 
-        selected = false;
+        isSelectedInInventory = false;
+        isSelectedInUsable = false;
         isAdded = false;
         isActive = false;
         isAttacking = false;
