@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Pepijn/StartMenu.unity
+    guid: ba4d0720a7624264b9e7d01e3a595fd7
+  - enabled: 1
+    path: Assets/Pepijn/Pepijn.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Pepijn/GameOver.unity
+    guid: 114e063bf80bf8a4ca9b2907b66dd2f1
   m_configObjects: {}

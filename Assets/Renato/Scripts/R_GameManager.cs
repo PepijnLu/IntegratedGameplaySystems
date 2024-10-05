@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class R_GameManager : MonoBehaviour
@@ -21,6 +20,7 @@ public class R_GameManager : MonoBehaviour
     void Awake() 
     {
         player = Instantiate(Player.prefab, Player.spawnPoint.position, Player.spawnPoint.rotation);
+        Camera.main.gameObject.transform.SetParent(player.transform);
         
         // Instantiate R_Player with the player's Transform
         Player = new(player.transform, 10f);

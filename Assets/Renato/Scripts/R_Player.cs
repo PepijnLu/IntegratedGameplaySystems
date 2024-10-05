@@ -14,6 +14,7 @@ public class R_Player
     // Public
     public GameObject prefab;
     public Transform spawnPoint;
+    public static Transform publicTransform;
     
 
     // Private
@@ -30,6 +31,7 @@ public class R_Player
     {
         this.transform = transform;
         this.movementSpeed = movementSpeed;
+        publicTransform = transform;
 
         CustomAwake();
     }

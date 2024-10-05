@@ -18,8 +18,8 @@ public class DecreaseStatsOverTime : EventUser
     protected override void FixedUpdate()
     {
         //Check if condition is met
-        eventManager.InvokeEvent("ChangeStat", "Health", -0.02f, true);
-        eventManager.InvokeEvent("ChangeStat", "Thirst", -0.02f, true);
-        eventManager.InvokeEvent("ChangeStat", "Hunger", -0.02f, true);
+        //eventManager.InvokeEvent("ChangeStat", "Health", -0.005f, true);
+        eventManager.InvokeEvent("ChangeStat", "Thirst", -0.015f, true);
+        eventManager.InvokeEvent("ChangeStat", "Hunger", -0.015f, true);
     }
 }
