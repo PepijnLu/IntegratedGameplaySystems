@@ -68,6 +68,15 @@ public class R_InputHandler
         float y = verticalAxis.GetAxisValue();
 
         Vector2 direction = movementSpeed * Time.deltaTime * new Vector2(x, y);
+
+        if(transform == null) 
+        {
+            Debug.LogWarning("Transform is null");
+        }
+        else 
+        {
+            Debug.Log($"{transform.name} found");
+        }
         transform.Translate(direction);
         
         return null;

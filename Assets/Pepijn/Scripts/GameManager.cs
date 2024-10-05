@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour
         customTileBases = GetTypeBasesFromAssets();
         foreach (TileBase _base in customTileBases)
         {
+            Debug.Log($"{_base.name}");
+
             if (_base is CustomConsumableTile _customTile)
             {
                 _customTile.SetEventManager(eventManager);
@@ -63,6 +65,7 @@ public class GameManager : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().name == "Pepijn")
         {
+            // LAST STAGE
             //Invoke the update method
             eventManager.InvokeAction("Update");
         }

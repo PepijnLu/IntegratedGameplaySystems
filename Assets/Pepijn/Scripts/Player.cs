@@ -29,8 +29,9 @@ public class Player : EventUser
     protected override void Update()
     {
         //Try consume with Renato's player transform
-        if(Input.GetKeyDown(KeyCode.E))
+        if(Input.GetKeyDown(KeyCode.V))
         {
+            // 3RTH STAGE
             eventManager.InvokeEvent("TryConsume", R_Player.publicTransform);
         }
     }

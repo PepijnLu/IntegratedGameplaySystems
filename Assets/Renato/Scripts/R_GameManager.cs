@@ -4,9 +4,9 @@ using UnityEngine;
 public class R_GameManager : MonoBehaviour
 {
     // SerializeField
-    [SerializeField] private R_Player Player;
+    [SerializeField] private R_Player player;
     [SerializeField] private R_WeaponsManager weaponGameManager;
-    [SerializeField] private R_UIManager r_UIManager;
+    [SerializeField] private R_UIManager UIManager;
 
     // Public
 
@@ -20,8 +20,9 @@ public class R_GameManager : MonoBehaviour
     void Awake() 
     {
         // Player
-        playerObj = Instantiate(player.prefab, player.spawnPoint.position, player.spawnPoint.rotation);
-        Player = new(playerObj.transform, 10f, weaponGameManager, r_UIManager)
+        playerObj = Instantiate(player.prefab, player.spawnPoint.position, Quaternion.identity);
+        
+        player = new(weaponGameManager, UIManager, playerObj.transform, 10f)
         {
             inventory = playerObj.transform.GetChild(0).gameObject,
             usableInventory = playerObj.transform.GetChild(1).gameObject,
@@ -29,22 +30,35 @@ public class R_GameManager : MonoBehaviour
         };
 
         // UI
+        Camera.main.gameObject.transform.SetParent(playerObj.transform);
+        // UIManager = new();
 
-        Camera.main.gameObject.transform.SetParent(player.transform);
-        
-        // Instantiate R_Player with the player's Transform
-
-        uIManager = new();
+        if(player == null) 
+        {
+            Debug.Log("Player not found from Awake");
+            return;
+        }
     }
 
     void Start()
     {
+        if(player == null) 
+        {
+            Debug.Log("Player not found from Start");
+            return;
+        }
+
         player.CustomStart();
         weaponGameManager.CustomStart();
     }
 
     void Update()
     {
+        if(player == null) 
+        {
+            Debug.Log("Player not found from Update");
+            return;
+        }
         player.CustomUpdate();
     }
 }

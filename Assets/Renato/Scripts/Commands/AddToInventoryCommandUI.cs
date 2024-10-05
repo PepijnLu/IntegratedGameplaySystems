@@ -41,24 +41,23 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
         RemoveFromInventoryUI();
     }
 
-     private void InstantiateUISlot(R_UIManager r_UIManager)
+    private void InstantiateUISlot(R_UIManager r_UIManager)
     {
         // Image slotIcon;
         GameObject slotPrefab = Resources.Load<GameObject>(slotPrefabPath);
         
         // Instantiate the loaded prefab
         GameObject slot = GameObject.Instantiate(slotPrefab);
+        r_UIManager.UI_slotList.Add(slot);
 
         // Get image component
         Image slotImage = slot.GetComponent<Image>();
-
         slot.transform.SetParent(r_UIManager.UI_weaponInventory.transform);
         slot.name = t.Name;
 
         // Assign the sprite from the Iidentifiable to the sprite of the slot image
         slotImage.sprite = t.Icon;
 
-        r_UIManager.UI_slotList.Add(slot);
 
         if(!r_UIManager.UI_slotDictionary.ContainsKey(slot.name)) 
         {
@@ -141,7 +140,7 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
 
                             // Remove the weapon from the inventory and dictionary
                             r_WeaponsManager.weaponsInventoryAsGameObjectList.Remove(w2);
-                            r_WeaponsManager.weaponInventoryDictionary.Remove(key, out w);
+                            r_WeaponsManager.weaponInventoryDictionary.Remove(key);
                             // r_WeaponsManager.inventoryEntries.RemoveAt(j);
 
                             // Update UI - remove slot from the UI
@@ -160,11 +159,15 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
                             break; // Break out of the loop once the weapon is removed
                         }
                     }
+
+                    break;
                 }
                 else
                 {
                     Debug.Log($"Selected slot doesn't match the key or selectedSlot is null. Selected slot: {r_UIManager?.selectedSlot?[0]?.name}, Key: {key}");
                 }
+
+                break;
             }
             else
             {

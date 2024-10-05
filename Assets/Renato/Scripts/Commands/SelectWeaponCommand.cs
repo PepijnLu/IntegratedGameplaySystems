@@ -129,84 +129,161 @@ public class AddToUsableInventoryCommand: ICommand
     }
 
     private void OnClickAdd(ref GameObject addBtn, ref GameObject removeBtn) 
+{
+    if (selectedSlot.Count == 1) 
     {
-        if(selectedSlot.Count == 1) 
+        R_Weapon w = selectedSlot[0];
+
+        if (w == null) return; 
+
+        if (!weaponGameManager.usableWeaponDictionary.ContainsValue(w) && weaponGameManager.usableWeaponDictionary.Count < 2) 
         {
-            R_Weapon w = selectedSlot[0];
+            weaponGameManager.usableWeaponDictionary.Add(w.Name, w);
 
-            if(w == null) return; 
+            // Create a new entry point for the dictionary
+            var entry = new SerializableDictionary<string, R_Weapon> 
+            {   
+                key = w.Name,
+                value = w
+            };
 
-            if(!weaponGameManager.usableWeaponDictionary.ContainsValue(w) && weaponGameManager.usableWeaponDictionary.Count < 2) 
+            // Add it to the list of usable entries
+            weaponGameManager.usableWeaponInventoryEntries.Add(entry);
+
+            // Update UI (iterate in reverse to avoid index errors)
+            for (int i = UIManager.UI_slotList.Count - 1; i >= 0; i--)
             {
-                weaponGameManager.usableWeaponDictionary.Add(w.Name, w);
-                
-                // Create a new entry point for the dictionary
-                var entry = new SerializableDictionary<string, R_Weapon> 
-                {   
-                    key = w.Name,
-                    value = w
-                };
+                GameObject slot = UIManager.UI_slotList[i];
 
-                // Add it in the list of usable entries
-                weaponGameManager.usableWeaponInventoryEntries.Add(entry);
-
-                // Update UI
-                for (int i = 0; i < UIManager.UI_slotList.Count; i++)
+                if (string.Equals(slot.name.Trim(), w.Name.Trim(), System.StringComparison.OrdinalIgnoreCase))
                 {
-                    GameObject slot = UIManager.UI_slotList[i];
+                    UIManager.UI_UsableWeaponsList.Add(slot);
+                    UIManager.UI_slotList.RemoveAt(i); // Remove from the inventory list
 
-                    if (string.Equals(slot.name.Trim(), w.Name.Trim(), System.StringComparison.OrdinalIgnoreCase))
-                    {
-                        UIManager.UI_UsableWeaponsList.Add(slot);
-                        UIManager.UI_slotList.Remove(slot); 
+                    // Move the slot to the usable inventory panel
+                    slot.transform.SetParent(UIManager.UI_usableWeaponsInventory.transform);
 
-                        // Move the slot to the usable inventory panel
-                        slot.transform.SetParent(UIManager.UI_usableWeaponsInventory.transform);
-
-                        break; 
-                    }
+                    break; 
                 }
+            }
 
-                // Entry point for the UI slots
-                for (int i = 0; i < UIManager.slotDictionaryEntry.Count; i++)
+            // Entry point for the UI slots (iterate in reverse to avoid index issues)
+            for (int i = UIManager.slotDictionaryEntry.Count - 1; i >= 0; i--)
+            {
+                var item = UIManager.slotDictionaryEntry[i];
+                if (item.key == w.Name) 
                 {
-                    var item = UIManager.slotDictionaryEntry[i];
-                    if(item.key == w.Name) 
-                    {
-                        UIManager.UI_slotDictionary.Remove(item.key, out item.value);
-                        UIManager.slotDictionaryEntry.Remove(item);
-                        
-                        break;
-                    }
+                    UIManager.UI_slotDictionary.Remove(item.key, out item.value);
+                    UIManager.slotDictionaryEntry.RemoveAt(i);
+                    break;
                 }
+            }
 
-                // Inventory of weapon game objects
-                for (int i = 0; i < weaponGameManager.weaponsInventoryAsGameObjectList.Count; i++)
+            // Inventory of weapon game objects (iterate in reverse)
+            for (int i = weaponGameManager.weaponsInventoryAsGameObjectList.Count - 1; i >= 0; i--)
+            {
+                var weapon = weaponGameManager.weaponsInventoryAsGameObjectList[i];
+                if (weapon.name == w.Name) 
                 {
-                    var weapon = weaponGameManager.weaponsInventoryAsGameObjectList[i];
-                    if(weapon.name == w.Name) 
-                    {
-                        // weaponGameManager.weaponInventoryList.Remove(weapon);
-                        weaponGameManager.usableWeaponsAsGameObjectList.Add(weapon);
-                        weapon.transform.SetParent(player.usableInventory.transform);
-                        break;
-                    }
+                    weaponGameManager.usableWeaponsAsGameObjectList.Add(weapon);
+                    weapon.transform.SetParent(player.usableInventory.transform);
+                    break;
                 }
+            }
 
-                // Move the slot to the usable inventory on the canvas
-                if(weaponGameManager.usableWeaponDictionary.Count <= 2) 
-                {
-                    DeactivateSelectPanels(UIManager);
-                    addBtn.SetActive(false);
-                    removeBtn.SetActive(false);
-                }
+            if (weaponGameManager.usableWeaponDictionary.Count <= 2) 
+            {
+                DeactivateSelectPanels(UIManager);
+                addBtn.SetActive(false);
+                removeBtn.SetActive(false);
+            }
+        } 
 
-            } 
-
-            w.isSelectedInInventory = false;
-            selectedSlot.Clear(); 
-        }
+        w.isSelectedInInventory = false;
+        selectedSlot.Clear(); 
     }
+}
+
+
+    // private void OnClickAdd(ref GameObject addBtn, ref GameObject removeBtn) 
+    // {
+    //     if(selectedSlot.Count == 1) 
+    //     {
+    //         R_Weapon w = selectedSlot[0];
+
+    //         if(w == null) return; 
+
+    //         if(!weaponGameManager.usableWeaponDictionary.ContainsValue(w) && weaponGameManager.usableWeaponDictionary.Count < 2) 
+    //         {
+    //             weaponGameManager.usableWeaponDictionary.Add(w.Name, w);
+                
+    //             // Create a new entry point for the dictionary
+    //             var entry = new SerializableDictionary<string, R_Weapon> 
+    //             {   
+    //                 key = w.Name,
+    //                 value = w
+    //             };
+
+    //             // Add it in the list of usable entries
+    //             weaponGameManager.usableWeaponInventoryEntries.Add(entry);
+
+    //             // Update UI
+    //             for (int i = 0; i < UIManager.UI_slotList.Count; i++)
+    //             {
+    //                 GameObject slot = UIManager.UI_slotList[i];
+
+    //                 if (string.Equals(slot.name.Trim(), w.Name.Trim(), System.StringComparison.OrdinalIgnoreCase))
+    //                 {
+    //                     UIManager.UI_UsableWeaponsList.Add(slot);
+    //                     UIManager.UI_slotList.Remove(slot); 
+
+    //                     // Move the slot to the usable inventory panel
+    //                     slot.transform.SetParent(UIManager.UI_usableWeaponsInventory.transform);
+
+    //                     break; 
+    //                 }
+    //             }
+
+    //             // Entry point for the UI slots
+    //             for (int i = 0; i < UIManager.slotDictionaryEntry.Count; i++)
+    //             {
+    //                 var item = UIManager.slotDictionaryEntry[i];
+    //                 if(item.key == w.Name) 
+    //                 {
+    //                     UIManager.UI_slotDictionary.Remove(item.key, out item.value);
+    //                     UIManager.slotDictionaryEntry.Remove(item);
+                        
+    //                     break;
+    //                 }
+    //             }
+
+    //             // Inventory of weapon game objects
+    //             for (int i = 0; i < weaponGameManager.weaponsInventoryAsGameObjectList.Count; i++)
+    //             {
+    //                 var weapon = weaponGameManager.weaponsInventoryAsGameObjectList[i];
+    //                 if(weapon.name == w.Name) 
+    //                 {
+    //                     // weaponGameManager.weaponInventoryList.Remove(weapon);
+    //                     weaponGameManager.usableWeaponsAsGameObjectList.Add(weapon);
+    //                     weapon.transform.SetParent(player.usableInventory.transform);
+    //                     break;
+    //                 }
+    //             }
+
+    //             // Move the slot to the usable inventory on the canvas
+    //             if(weaponGameManager.usableWeaponDictionary.Count <= 2) 
+    //             {
+    //                 DeactivateSelectPanels(UIManager);
+    //                 addBtn.SetActive(false);
+    //                 removeBtn.SetActive(false);
+    //             }
+
+    //         } 
+
+    //         w.isSelectedInInventory = false;
+    //         selectedSlot.Clear(); 
+    //     }
+    // }
 
 
     private void DeactivateSelectPanels(R_UIManager r_UIManager)

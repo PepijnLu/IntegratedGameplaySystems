@@ -9,9 +9,7 @@ public class R_Player
     // Public
     public static Transform publicTransform;
     public GameObject prefab;
-    public Transform spawnPoint;
-    public static Transform publicTransform;
-    
+    public Transform spawnPoint;    
     
     public GameObject inventory, usableInventory, activeWeaponSlot;
 
@@ -36,18 +34,17 @@ public class R_Player
     // Constructor
     public R_Player
     (
-        Transform transform, 
-        float movementSpeed, 
         R_WeaponsManager weaponManager,
         R_UIManager UIManager,
-        Transform transform
+        Transform transform,
+        float movementSpeed
     ) 
-    {
+    {        
+        this.weaponManager = weaponManager;
+        this.UIManager = UIManager;
         this.transform = transform;
         this.movementSpeed = movementSpeed;
-        publicTransform = transform;
-        this.weaponManager = weaponManager; // Set the instance
-        this.UIManager = UIManager;
+
         publicTransform = transform;
 
         CustomAwake();
@@ -57,6 +54,11 @@ public class R_Player
     {
         // Input key
         input = new();
+
+        if(input == null) 
+        {
+            Debug.Log("Input Handler not found");
+        }
 
         // Add to list command
         addCommand = new AddToInventory<GameObject>

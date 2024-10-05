@@ -50,7 +50,13 @@ public class CustomConsumableTile : Tile, IConsumable
     }
     private void TryConsumeTile(Transform _transform)
     {
+        // ERROR STARTS HERE
         Vector3Int cellPosition = eventManager.interactableTileMap.WorldToCell(_transform.position);
+
+        if(eventManager.interactableTileMap == null) 
+        {
+            Debug.LogWarning("No interactable tilemap found");
+        }
 
         if(tilePositionsConsumesLeft.ContainsKey(cellPosition))
         {

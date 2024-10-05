@@ -20,6 +20,7 @@ public class EventManager
     {
         if (actions.ContainsKey(myEvent))
         {
+            // 4TH STAGE
             actions[myEvent]?.Invoke();
         }
     }
@@ -36,11 +37,12 @@ public class EventManager
         };
     }
 
-//Events are delegates that take parameters
+    //Events are delegates that take parameters
     public void InvokeEvent(string myEvent, params object[] paramaters)
     {
         if (events.ContainsKey(myEvent))
         {
+            // SECOND STAGE
             events[myEvent]?.DynamicInvoke(paramaters);
         }
     }
