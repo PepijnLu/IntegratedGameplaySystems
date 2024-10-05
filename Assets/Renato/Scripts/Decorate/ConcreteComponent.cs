@@ -7,15 +7,18 @@ public class ConcreteComponentAdd<T> : IComponentAdd
 {
     private ConcreteDecoratorAdd decorator;
     private readonly List<T> list;
+    private readonly GameObject inventory;
     private readonly T t;
 
     public ConcreteComponentAdd
     (
-        List<T> list, 
+        List<T> list,
+        GameObject inventory, 
         T t
     ) 
     {
         this.list = list;
+        this.inventory = inventory;
         this.t = t;
 
         CustomAwake();
@@ -26,20 +29,14 @@ public class ConcreteComponentAdd<T> : IComponentAdd
         decorator = new();
     }
 
-    public void AddToList() 
+    public void Add() 
     {
-        decorator.AddToList(list, t);
+        decorator.AddToInventory(list, inventory, t);
     }
 
-    public void DropFromList() 
+    public void DropFromInventory() 
     {
-        decorator.RemoveFromList(list, t);
-    }
-
-    public TValue RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, TValue value) 
-    {
-        decorator.RemoveFromDictionary(dictionary, key);
-        return value;
+        decorator.RemoveFromInventory(list, t);
     }
 
     public TValue AddToDictionary<TValue>
@@ -47,7 +44,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
         Dictionary<string, TValue> dictionary, 
         string key, 
         List<TValue> allObjList,
-        List<SerializableDictionary<TValue>> serializableDictionary
+        List<SerializableDictionary<string, TValue>> serializableDictionary
     )
     {
         foreach (TValue obj in allObjList)
@@ -83,7 +80,7 @@ public class ConcreteComponentAdd<T> : IComponentAdd
                 }
                 else
                 {
-                    var newEntry = new SerializableDictionary<TValue>
+                    var newEntry = new SerializableDictionary<string, TValue>
                     {
                         key = key,
                         value = obj

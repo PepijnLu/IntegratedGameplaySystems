@@ -23,8 +23,10 @@ public interface IAxisCommand
 /// </summary>
 public interface IIdentifiable
 {
+    GameObject Obj { get; }
     string Name { get; }
     Sprite Icon { get; }
     bool IsAdded { set; }
+    bool IsGrabable { get; set; }
 }
 

@@ -13,12 +13,19 @@ MonoBehaviour:
   m_Name: FireSword
   m_EditorClassIdentifier: 
   weaponPrefab: {fileID: 747030252379573556, guid: 4f342264fb0b18547a2b3de64d3eafab, type: 3}
-  currentWeapon: {fileID: 0}
+  newWeapon: {fileID: 0}
   icon: {fileID: 21300000, guid: 6b004e0bbad41114ab63129d35a086ef, type: 3}
   name: FireSword
-  isActive: 0
+  normalAttack: {fileID: 11400000, guid: d5e71e46b262d6b4ab38bba884c5c7f4, type: 2}
+  superAttack: {fileID: 11400000, guid: 6f069404abd2a12449eeaf89210ccc21, type: 2}
+  abilities:
+  - {fileID: 11400000, guid: 146d9170365d9f347bd0ab0ecfd2a13a, type: 2}
+  - {fileID: 11400000, guid: f02c2118e8020184ca4b53707b564107, type: 2}
+  isActive: 1
+  isAdded: 0
+  isSelectedInInventory: 0
+  isSelectedInUsable: 0
   isAttacking: 0
+  isGrabable: 0
   attackRate: 2
   nextTimeToAttack: 0
-  isAdded: 0
-  selected: 0

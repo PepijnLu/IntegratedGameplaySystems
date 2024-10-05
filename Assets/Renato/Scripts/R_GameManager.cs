@@ -13,15 +13,20 @@ public class R_GameManager : MonoBehaviour
     // Protected
 
     // Private
-    private GameObject playerObj;
+    public GameObject playerObj;
 
     // Private Readonly
 
     void Awake() 
     {
         // Player
-        playerObj = Instantiate(player.prefab, player.spawnPoint.position, player.spawnPoint.rotation);        
-        player = new(playerObj.transform, 10f, weaponGameManager, r_UIManager);
+        playerObj = Instantiate(player.prefab, player.spawnPoint.position, player.spawnPoint.rotation);
+        player = new(playerObj.transform, 10f, weaponGameManager, r_UIManager)
+        {
+            inventory = playerObj.transform.GetChild(0).gameObject,
+            usableInventory = playerObj.transform.GetChild(1).gameObject,
+            activeWeaponSlot = playerObj.transform.GetChild(2).gameObject
+        };
 
         // UI
     }
@@ -35,7 +40,6 @@ public class R_GameManager : MonoBehaviour
     void Update()
     {
         player.CustomUpdate();
-        // r_UIManager.Select(weaponGameManager.weaponInvDict, weaponGameManager);
     }
 }
 
@@ -48,19 +52,18 @@ public class R_WeaponsManager
     [SerializeField] public List<Transform> spawnPoints;
 
     [Header("Weapons Inventory")]
-    [SerializeField] public List<GameObject> weaponInventory = new();
-    [SerializeField] public List<SerializableDictionary<R_Weapon>> inventoryEntries = new();
+    [SerializeField] public List<GameObject> weaponInventoryList = new();
+    [SerializeField] public List<SerializableDictionary<string, R_Weapon>> inventoryEntries = new();
     public Dictionary<string, R_Weapon> weaponInvDictionary = new();
 
     [Header("Usable Weapons Inventory")]
-    [SerializeField] public List<R_Weapon> usableWeapons = new();
-    [SerializeField] public List<SerializableDictionary<R_Weapon>> usableEntries = new();
+    [SerializeField] public List<R_Weapon> usableScriptableWeapons = new();
+    [SerializeField] public List<GameObject> usableGameObjectWeapons = new();
+    [SerializeField] public List<SerializableDictionary<string, R_Weapon>> usableEntries = new();
     public Dictionary<string, R_Weapon> usableWeaponDictionary = new();
-    // public R_Weapon activeWeapon;
-    // public GameObject activeGameObjectWeapon;
-
-
-    public List<R_Weapon> activeWeapon = new();
+    [SerializeField] public List<R_Weapon> activeWeapon = new();
+    
+    [SerializeField] public List<SerializableDictionary<GameObject, R_Weapon>> activeWeaponEntry = new();
     
     public void CustomStart() 
     {
@@ -85,7 +88,7 @@ public class R_WeaponsManager
         {
             R_Weapon weapon = allWeapons[i];
             GameObject spawnPoint = spawnPoints[i].gameObject;
-            weapon.Instantiate(spawnPoint.transform);
+            weapon.InstantiateAtStart(spawnPoint.transform);
         }
     }
 
@@ -111,7 +114,7 @@ public class R_UIManager
 {
     [Header("Weapons Inventory")]
     [SerializeField] public GameObject weaponInventoryUI; // UI inventory
-    [SerializeField] public List<SerializableDictionary<GameObject>> slotDictionaryEntry = new(); // Class entry to store the values from the dictionary
+    [SerializeField] public List<SerializableDictionary<string, GameObject>> slotDictionaryEntry = new(); // Class entry to store the values from the dictionary
     public Dictionary<string, GameObject> slotDictionaryUI = new(); // Dictionary to store the UI slots
     [SerializeField] public List<GameObject> slotListUI = new(); // List to store UI slots in (need it in order to add it into the dictionary)
 
@@ -129,8 +132,8 @@ public class R_UIManager
 /// </summary>
 /// <typeparam name="T"></typeparam>
 [System.Serializable]
-public class SerializableDictionary<T>
+public class SerializableDictionary<TKey, TValue>
 {
-    public string key;
-    public T value;
+    public TKey key;
+    public TValue value;
 }

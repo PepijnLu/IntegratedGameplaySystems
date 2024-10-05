@@ -66,7 +66,7 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
             r_UIManager.slotDictionaryUI.Add(slot.name, slot);
             
             // Create a new entry to store the name and the gameobject
-            var entry = new SerializableDictionary<GameObject> 
+            var entry = new SerializableDictionary<string, GameObject> 
             {   
                 key = slot.name,
                 value = slot
@@ -91,7 +91,6 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
         for (int i = 0; i < r_UIManager.slotListUI.Count; i++)
         {
             var weaponSlot = r_UIManager.slotListUI[i];
-            // Debug.Log($"Processing UI slot: {weaponSlot.name}");
 
             if (weaponSlot == null)
             {
@@ -100,10 +99,7 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
             }
 
             Transform buttonPanel = weaponSlot.transform.GetChild(0);
-            // Debug.Log($"Button panel name: '{buttonPanel.name}'");
-
             Transform removeButton = buttonPanel.GetChild(0);
-            // Debug.Log($"Remove button name: '{removeButton.name}'");
 
             if(removeButton.gameObject.TryGetComponent<Button>(out var btn)) 
             {
@@ -119,55 +115,40 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
 
     private void RemoveEvent() 
     {
-        if (r_WeaponsManager == null || r_WeaponsManager.weaponInvDictionary == null)
-        {
-            // Debug.LogError("R_WeaponsManager or weaponInvDictionary is null! Cannot remove event.");
-            return;
-        }
-
+        if (r_WeaponsManager == null || r_WeaponsManager.weaponInvDictionary == null) return;
+    
         // Iterate through the dictionary of weapon inventory using a for loop
         for (int i = 0; i < r_WeaponsManager.weaponInvDictionary.Count; i++)
         {
-            // Access the element by index using ElementAt
             var item = r_WeaponsManager.weaponInvDictionary.ElementAt(i);
             string key = item.Key;
             R_Weapon w = item.Value;
 
-            // Debug.Log($"Checking weapon in inventory: {key}, selected state: {w.isSelectedInInventory}");
-
             // Check if the weapon is selected
             if (w.isSelectedInInventory)
             {
-                // Debug.Log($"Weapon {key} is selected");
-
                 // Check if the selected weapon matches the one in the UI slot
                 if (r_UIManager.selectedSlot != null && r_UIManager.selectedSlot.Count > 0 && r_UIManager.selectedSlot[0].name == key)
                 {
-                    // Debug.Log($"Removing weapon from inventory: {key}");
-
-                    for (int j = 0; j < r_WeaponsManager.weaponInventory.Count; j++)
+                    for (int j = 0; j < r_WeaponsManager.weaponInventoryList.Count; j++)
                     {
-                        var w2 = r_WeaponsManager.weaponInventory[j];
+                        var w2 = r_WeaponsManager.weaponInventoryList[j];
 
                         if (key == w2.name)
                         {
-                            // Debug.Log($"Match found, removing weapon: {key}");
-
                             // Mark the weapon as deselected
                             w.isSelectedInInventory = false;
 
                             // Remove the weapon from the inventory and dictionary
-                            r_WeaponsManager.weaponInventory.Remove(w2);
+                            r_WeaponsManager.weaponInventoryList.Remove(w2);
                             r_WeaponsManager.weaponInvDictionary.Remove(key, out w);
                             r_WeaponsManager.inventoryEntries.RemoveAt(j);
 
-                            // Debug log to confirm removal
-                            // Debug.Log($"Weapon {key} removed from inventory and dictionary");
-
                             // Update UI - remove slot from the UI
                             GameObject slot = r_UIManager.slotListUI[j];
-                            // Debug.Log($"Removing UI slot: {slot.name}");
                             r_UIManager.slotListUI.Remove(slot);
+
+                            // Remove from entry point
                             r_UIManager.slotDictionaryEntry.RemoveAt(j);
 
                             // Remove from selected slot
@@ -175,7 +156,6 @@ public class AddToInventoryCommandUI<T> : ICommand where T : IIdentifiable
 
                             // Destroy the slot object
                             GameObject.Destroy(slot);
-                            // Debug.Log($"Destroyed UI slot for weapon: {key}");
 
                             break; // Break out of the loop once the weapon is removed
                         }

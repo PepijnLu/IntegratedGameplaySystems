@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 public interface IComponentAdd
 {
-    void AddToList();
-    void DropFromList();
+    void Add();
+    void DropFromInventory();
     
     /// <summary>
     /// This method returns the type added in the dictionary. Also creates a new entry point inside the inspector for the dictionary.
@@ -14,7 +14,7 @@ public interface IComponentAdd
         Dictionary<string, TValue> dictionary, 
         string key, 
         List<TValue> allObjList,
-        List<SerializableDictionary<TValue>> serializableDictionary
+        List<SerializableDictionary<string, TValue>> serializableDictionary
     ); 
 }
 

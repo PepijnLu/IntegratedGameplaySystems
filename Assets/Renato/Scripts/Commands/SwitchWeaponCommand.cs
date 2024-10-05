@@ -14,9 +14,9 @@ public class SwapWeaponCommand : ICommand
         this.r_WeaponsManager = r_WeaponsManager;
 
         // Initialize currentWeapon if the list is not empty
-        if (r_WeaponsManager.usableWeapons.Count > 0)
+        if (r_WeaponsManager.usableScriptableWeapons.Count > 0)
         {
-            currentWeapon = r_WeaponsManager.usableWeapons[0];
+            currentWeapon = r_WeaponsManager.usableScriptableWeapons[0];
             Debug.Log($"Initialized currentWeapon: {currentWeapon.Name}");
         }
         else
@@ -34,51 +34,73 @@ public class SwapWeaponCommand : ICommand
     {
         
     }
-
+    
     public void SwapWeapon() 
     {
         // Deactivate all weapons
-        foreach (var item in r_WeaponsManager.usableWeaponDictionary)
+        for (int i = 0; i < r_WeaponsManager.usableScriptableWeapons.Count; i++)
         {
-            // string key = item.Key;
-            R_Weapon w = item.Value;
-            
-            w.isActive = false;
-            Debug.Log($"{w.Name} is deactivcated");
+            R_Weapon weapon = r_WeaponsManager.usableScriptableWeapons[i];
+            GameObject weaponObj = r_WeaponsManager.usableGameObjectWeapons[i];
+
+            weapon.isActive = false;
+            weaponObj.SetActive(false); // Deactivate the corresponding GameObject
+            Debug.Log($"{weapon.Name} is deactivated");
         }
 
-        r_WeaponsManager.activeWeapon.Clear();
-        
         // Find the currently active weapon, if any
-        for (int i = 0; i < r_WeaponsManager.usableWeapons.Count; i++)
+        for (int i = 0; i < r_WeaponsManager.usableScriptableWeapons.Count; i++)
         {
-            R_Weapon w = r_WeaponsManager.usableWeapons[i];
-            if(w.isActive) 
+            R_Weapon w = r_WeaponsManager.usableScriptableWeapons[i];
+            GameObject obj = r_WeaponsManager.usableGameObjectWeapons[i];
+
+            if (w.isActive) 
             {
                 currentWeaponIndex = i;
                 currentWeapon = w;
-                Debug.Log($"{w}");
+                obj.SetActive(true); // Activate the currently active weapon's GameObject
+                Debug.Log($"{currentWeapon.Name} is currently active with index {currentWeaponIndex}");
+
                 break;
             }
-
-            // If no active weapon was found, select the first weapon in the list as the default
-            if(currentWeapon == null) 
-            {
-                Debug.LogWarning("Current weapon is null");
-                currentWeaponIndex = 0;
-                currentWeapon = r_WeaponsManager.usableWeapons[0];
-            }
-
-            // Calculate the next weapon to switch to
-            int nextWeaponIndex = (currentWeaponIndex + 1) % r_WeaponsManager.usableWeapons.Count;
-            R_Weapon nextWeapon = r_WeaponsManager.usableWeapons[nextWeaponIndex];
-            currentWeaponIndex = nextWeaponIndex;
-            
-            Debug.Log($"{nextWeapon} switched with {currentWeapon} with the number {currentWeaponIndex} as index");
-
-            // Add the new active weapon to the list and mark it as active
-            r_WeaponsManager.activeWeapon.Add(nextWeapon);
-            nextWeapon.isActive = true;
         }
+
+        // If no active weapon was found, select the first weapon in the list as the default
+        if (currentWeapon == null) 
+        {
+            Debug.LogWarning("Current weapon is null");
+            currentWeaponIndex = 0;
+
+            if(r_WeaponsManager.usableScriptableWeapons.Count > 0) 
+            {
+                currentWeapon = r_WeaponsManager.usableScriptableWeapons[currentWeaponIndex];
+                
+                GameObject obj = r_WeaponsManager.usableGameObjectWeapons[currentWeaponIndex];
+                obj.SetActive(true); // Activate the first weapon's GameObject by default
+            } 
+        }
+
+        // Calculate the next weapon to switch to
+        int nextWeaponIndex = (currentWeaponIndex + 1) % r_WeaponsManager.usableScriptableWeapons.Count;
+        R_Weapon nextWeapon = r_WeaponsManager.usableScriptableWeapons[nextWeaponIndex];
+        GameObject nextWeaponObj = r_WeaponsManager.usableGameObjectWeapons[nextWeaponIndex];
+        
+        // Update the current weapon index to reflect the new active weapon
+        currentWeaponIndex = nextWeaponIndex;
+
+        // Log the correct weapons and their indices
+        Debug.Log($"{currentWeapon.Name} switched with {nextWeapon.Name} with the number {nextWeaponIndex} as index");
+
+        // Deactivate all weapons first
+        for (int i = 0; i < r_WeaponsManager.usableScriptableWeapons.Count; i++)
+        {
+            r_WeaponsManager.usableGameObjectWeapons[i].SetActive(false);
+        }
+
+        // Activate the next weapon and add it to the active weapon list
+        r_WeaponsManager.activeWeapon.Clear(); // Clear the previous active weapon list
+        r_WeaponsManager.activeWeapon.Add(nextWeapon); // Add the new active weapon
+        nextWeapon.isActive = true;
+        nextWeaponObj.SetActive(true); // Activate the corresponding GameObject
     }
 }

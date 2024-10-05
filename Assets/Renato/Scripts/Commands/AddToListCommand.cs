@@ -1,18 +1,22 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class AddToListCommand<T, TIdentifiable> : ICommand where TIdentifiable : IIdentifiable
+public class AddToInventory<T> : ICommand
 {
     private ConcreteComponentAdd<T> component;
     private readonly List<T> list;
+    private readonly GameObject inventory;
     private readonly T t;
 
-    public AddToListCommand
+    public AddToInventory
     (
         List<T> list,
+        GameObject inventory,
         T t
     ) 
     {
         this.list = list;
+        this.inventory = inventory;
         this.t = t;
 
         CustomAwake();
@@ -20,16 +24,16 @@ public class AddToListCommand<T, TIdentifiable> : ICommand where TIdentifiable :
 
     public void CustomAwake() 
     {
-        component = new(list, t);
+        component = new(list, inventory, t);
     }
 
     public void Execute()
     {
-        component.AddToList();
+        component.Add();
     }
 
     public void Undo()
     {
-        component.DropFromList();
+        component.DropFromInventory();
     }
 }

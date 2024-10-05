@@ -3,15 +3,15 @@ using System.Linq;
 using UnityEngine;
 public abstract class DecoratorAdd
 {
-    public abstract void AddToList<T>(List<T> list, T item);
-    public abstract void RemoveFromList<T>(List<T> list, T item);
+    public abstract void AddToInventory<T>(List<T> list, GameObject inventory, T item);
+    public abstract void RemoveFromInventory<T>(List<T> list, T item);
     public abstract void AddToDictionary<TValue>(Dictionary<string, TValue> dictionary, string key, TValue value);
     public abstract void RemoveFromDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key);
 }
 
 public class ConcreteDecoratorAdd : DecoratorAdd
 {
-    public override void AddToList<T>(List<T> list, T item)
+    public override void AddToInventory<T>(List<T> list, GameObject inventory, T item)
     {
         if(item is GameObject gameObject)
         {
@@ -20,8 +20,11 @@ public class ConcreteDecoratorAdd : DecoratorAdd
             if(!alreadyExist) 
             {
                 list.Add(item);
+                gameObject.transform.SetParent(inventory.transform);
+
                 // Debug.Log($"Added {gameObject.name} to list. Message from Decorator class");
                 gameObject.SetActive(false);
+                gameObject.GetComponent<CircleCollider2D>().enabled = false;
             }
             else
             {
@@ -34,7 +37,7 @@ public class ConcreteDecoratorAdd : DecoratorAdd
         }
     }
 
-    public override void RemoveFromList<T>(List<T> list, T item)
+    public override void RemoveFromInventory<T>(List<T> list, T item)
     {
         // Remove from list logic
         if (list.Contains(item))

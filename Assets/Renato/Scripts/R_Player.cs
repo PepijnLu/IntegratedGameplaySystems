@@ -1,18 +1,17 @@
-using System.Diagnostics;
 using UnityEngine;
 
 [System.Serializable]
 public class R_Player
 {
     // SerializeField
-    [SerializeField] private GameObject activeWeapon;
     [SerializeField] private GameObject tempWeapon;
-    [SerializeField] private bool inRange;
 
     // Public
     public GameObject prefab;
     public Transform spawnPoint;
     
+    
+    public GameObject inventory, usableInventory, activeWeaponSlot;
 
     // Private
     private R_InputHandler input; // Key input
@@ -22,7 +21,7 @@ public class R_Player
     private ICommand addToInvCommandUI, openInvCommandUI;
     private ICommand selectCommand;
     private ICommand switchWeaponCommand;
-    public IComponentAdd componentAdd;
+    private IComponentAdd componentAdd;
     
     // Private readonly
     private readonly R_WeaponsManager w_gameManager;
@@ -55,24 +54,33 @@ public class R_Player
         input = new();
 
         // Add to list command
-        addCommand = new AddToListCommand<GameObject, R_Weapon>
+        addCommand = new AddToInventory<GameObject>
         (
-            w_gameManager.weaponInventory, 
+            w_gameManager.weaponInventoryList,
+            inventory, 
             null
         );
 
         // Remove from list command
-        removeCommand = new AddToListCommand<GameObject, R_Weapon>
+        removeCommand = new AddToInventory<GameObject>
         (
-            w_gameManager.weaponInventory, 
+            w_gameManager.weaponInventoryList,
+            inventory,
             null
         );
         
-        componentAdd = new ConcreteComponentAdd<GameObject>(w_gameManager.weaponInventory, null);
+        componentAdd = new ConcreteComponentAdd<GameObject>
+        (
+            w_gameManager.weaponInventoryList,
+            inventory, 
+            null
+        );
+
         openInvCommandUI = new OpenInventoryCommandUI(r_UIManager.weaponInventoryUI);
 
         selectCommand = new SelectWeaponCommand
         (
+            this,
             r_UIManager.selectedSlot,       // Slot of selected weapons
             w_gameManager,                  // Weapon game manager class
             r_UIManager                     // UI manager class
@@ -91,6 +99,9 @@ public class R_Player
         (
             w_gameManager
         );
+
+        // Get the inventory
+
     } 
 
     public void CustomStart() 
@@ -117,14 +128,29 @@ public class R_Player
         {            
             if(input.keyCommands.Find(k => k.key == KeyCode.E)?.command == addCommand) 
             {
-                addCommand = new AddToListCommand<GameObject, R_Weapon>
+                addCommand = new AddToInventory<GameObject>
                 (
-                    w_gameManager.weaponInventory, 
+                    w_gameManager.weaponInventoryList, 
+                    inventory,
                     tempWeapon
                 );
+
+                // Add weapon to list if weapon is not active
+                for (int i = 0; i < w_gameManager.allWeapons.Count; i++)
+                {
+                    var w = w_gameManager.allWeapons[i];
+                    if(w.Name == tempWeapon.name) 
+                    {
+                        if(w.isGrabable) 
+                        {
+                            addCommand.Execute();
+                            w.isGrabable = false;
+
+                            break;
+                        }
+                    }
+                }
                 
-                // Add to list
-                addCommand.Execute();
 
                 // Add to dictionary
                 var addedWeapon = componentAdd.AddToDictionary
@@ -180,7 +206,6 @@ public class R_Player
             if(collider != null && collider.CompareTag("Weapon")) 
             {
                 tempWeapon = collider.gameObject;
-                inRange = true;
 
                 bool foundMatch = false;
 
@@ -205,7 +230,6 @@ public class R_Player
             else 
             {
                 tempWeapon = null;
-                inRange = false;
             }
         }
 
