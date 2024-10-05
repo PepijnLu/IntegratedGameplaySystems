@@ -1,16 +1,50 @@
 using UnityEngine;
 
-
 [CreateAssetMenu(fileName = "NormalAttack", menuName = "Combat/Attacks/NormalAttack")]
-public class NormalAttack : ScriptableObject
+public class NormalAttack : ScriptableObject, ICombat
 {
-    private readonly NormalCombatCommand command;
-
     public void Attack() 
     {
-        // Only perform an attack if the weapon is active
+        // Execute combat
 
-        // Fetch the weapon 
+        // If weapon type == sword then execute sword combat
+
+        // else if weapon type == shield execute shield combat
+
+        // esle weapon type == magic wand execute magic wand combat
+    }
+
+    public void ExecuteSwordCombat()
+    {
+        // Manage combat
+
+        // Get the active weapon
+
+        // Get the active game object
+
+        // Move the game object to animate an attack move
+    }
+
+    public void ExecuteShieldCombat()
+    {
+        // Manage combat
+
+        // Get the active weapon
+
+        // Get the active game object
+
+        // Move the game object to animate an attack move
+    }
+
+    public void ExecuteMagicWandCombat()
+    {
+        // Manage combat
+
+        // Get the active weapon
+
+        // Get the active game object
+
+        // Move the game object to animate an attack move
     }
 }
 
@@ -43,5 +77,7 @@ public class NormalAttack : ScriptableObject
 
 public interface ICombat 
 {
-    abstract void ExecuteCombat();
+    abstract void ExecuteSwordCombat();
+    abstract void ExecuteShieldCombat();
+    abstract void ExecuteMagicWandCombat();
 }

@@ -30,7 +30,7 @@ public class R_Weapon : ScriptableObject, IIdentifiable
 
     [Header("Combat")]
     public NormalAttack normalAttack;
-    public SuperAttack superAttack;
+    // public SuperAttack superAttack;
     public List<ScriptableObject> abilities;
     
     [Header("Boolean")]

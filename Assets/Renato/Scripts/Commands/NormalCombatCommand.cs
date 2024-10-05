@@ -1,22 +1,12 @@
-public class NormalCombatCommand : ICommand, ICombat
+public class NormalCombatCommand : NormalAttack, ICommand
 {
-
     public void Execute()
     {
-        // Execute the Attack method
+        Attack();
     }
 
     public void Undo()
     {
         
-    }
-
-    public void ExecuteCombat()
-    {
-        // Normal attack logic
-
-        // Get the weapon game object
-
-        // Transform the weapon slightly so it looks like it's performing a swing as attack
     }
 }
