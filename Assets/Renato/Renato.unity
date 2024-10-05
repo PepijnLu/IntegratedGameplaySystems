@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: bab590b7ec2e881498ec7ff301d0da42, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -518,11 +518,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player:
-    activeWeapon: {fileID: 0}
     tempWeapon: {fileID: 0}
-    inRange: 0
     prefab: {fileID: 1543974493607163620, guid: 0de8a67ee8d89d143991e948de67027a, type: 3}
     spawnPoint: {fileID: 1389485540}
+    inventory: {fileID: 0}
+    usableInventory: {fileID: 0}
+    activeWeaponSlot: {fileID: 0}
   weaponGameManager:
     allWeapons:
     - {fileID: 11400000, guid: bd5261ed0e02f2944bc77e278d7ce174, type: 2}
@@ -539,10 +540,13 @@ MonoBehaviour:
     - {fileID: 954045471}
     - {fileID: 1429818692}
     - {fileID: 832176463}
-    weaponInventory: []
+    weaponInventoryList: []
     inventoryEntries: []
-    usableWeapons: []
+    usableScriptableWeapons: []
+    usableGameObjectWeapons: []
     usableEntries: []
+    activeWeapon: []
+    activeWeaponEntry: []
   r_UIManager:
     weaponInventoryUI: {fileID: 1875265195769455808}
     slotDictionaryEntry: []
@@ -552,6 +556,7 @@ MonoBehaviour:
     selectedSlot: []
     slotPrefab: {fileID: 0}
     slotPrefabPath: InventorySlot
+  playerObj: {fileID: 0}
 --- !u!4 &757970604
 Transform:
   m_ObjectHideFlags: 0

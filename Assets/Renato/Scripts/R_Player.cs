@@ -20,12 +20,12 @@ public class R_Player
     private ICommand addCommand, removeCommand;
     private ICommand addToInvCommandUI, openInvCommandUI;
     private ICommand selectCommand;
-    private ICommand switchWeaponCommand;
+    private ICommand switchWeaponCommand, activateWeaponCommand;
     private IComponentAdd componentAdd;
     
     // Private readonly
-    private readonly R_WeaponsManager w_gameManager;
-    private readonly R_UIManager r_UIManager;
+    private readonly R_WeaponsManager weaponManager;
+    private readonly R_UIManager UIManager;
     private readonly Transform transform; // Player's transform
     private readonly float movementSpeed;
 
@@ -36,14 +36,14 @@ public class R_Player
     (
         Transform transform, 
         float movementSpeed, 
-        R_WeaponsManager w_gameManager,
-        R_UIManager r_UIManager
+        R_WeaponsManager weaponManager,
+        R_UIManager UIManager
     ) 
     {
         this.transform = transform;
         this.movementSpeed = movementSpeed;
-        this.w_gameManager = w_gameManager; // Set the instance
-        this.r_UIManager = r_UIManager;
+        this.weaponManager = weaponManager; // Set the instance
+        this.UIManager = UIManager;
 
         CustomAwake();
     }
@@ -56,7 +56,7 @@ public class R_Player
         // Add to list command
         addCommand = new AddToInventory<GameObject>
         (
-            w_gameManager.weaponInventoryList,
+            weaponManager.weaponsInventoryAsGameObjectList,
             inventory, 
             null
         );
@@ -64,40 +64,47 @@ public class R_Player
         // Remove from list command
         removeCommand = new AddToInventory<GameObject>
         (
-            w_gameManager.weaponInventoryList,
+            weaponManager.weaponsInventoryAsGameObjectList,
             inventory,
             null
         );
         
         componentAdd = new ConcreteComponentAdd<GameObject>
         (
-            w_gameManager.weaponInventoryList,
+            weaponManager.weaponsInventoryAsGameObjectList,
             inventory, 
             null
         );
 
-        openInvCommandUI = new OpenInventoryCommandUI(r_UIManager.weaponInventoryUI);
+        openInvCommandUI = new OpenInventoryCommandUI(UIManager.UI_weaponInventory);
 
-        selectCommand = new SelectWeaponCommand
+        selectCommand = new AddToUsableInventoryCommand
         (
             this,
-            r_UIManager.selectedSlot,       // Slot of selected weapons
-            w_gameManager,                  // Weapon game manager class
-            r_UIManager                     // UI manager class
+            UIManager.selectedSlot,       // Slot of selected weapons
+            weaponManager,                  // Weapon game manager class
+            UIManager                     // UI manager class
         );
 
 
         addToInvCommandUI = new AddToInventoryCommandUI<IIdentifiable>
         (
-            w_gameManager,
-            r_UIManager,
-            r_UIManager.slotPrefabPath,             // Path to the prefab (resources)
+            weaponManager,
+            UIManager,
+            UIManager.slotPrefabPath,             // Path to the prefab (resources)
             null                                    // Is addedWeapon
         );
 
         switchWeaponCommand = new SwapWeaponCommand 
         (
-            w_gameManager
+            weaponManager
+        );
+
+        activateWeaponCommand = new ActivateWeaponCommand 
+        (
+            this,
+            weaponManager,
+            UIManager
         );
 
         // Get the inventory
@@ -130,15 +137,15 @@ public class R_Player
             {
                 addCommand = new AddToInventory<GameObject>
                 (
-                    w_gameManager.weaponInventoryList, 
+                    weaponManager.weaponsInventoryAsGameObjectList, 
                     inventory,
                     tempWeapon
                 );
 
                 // Add weapon to list if weapon is not active
-                for (int i = 0; i < w_gameManager.allWeapons.Count; i++)
+                for (int i = 0; i < weaponManager.allWeapons.Count; i++)
                 {
-                    var w = w_gameManager.allWeapons[i];
+                    var w = weaponManager.allWeapons[i];
                     if(w.Name == tempWeapon.name) 
                     {
                         if(w.isGrabable) 
@@ -155,10 +162,10 @@ public class R_Player
                 // Add to dictionary
                 var addedWeapon = componentAdd.AddToDictionary
                 (
-                    w_gameManager.weaponInvDictionary,          // Weapon's inventory dictionary
+                    weaponManager.weaponInventoryDictionary,          // Weapon's inventory dictionary
                     tempWeapon.name,                            // Weapon game object name
-                    w_gameManager.allWeapons,                   // List of Weapon class
-                    w_gameManager.inventoryEntries              // Serializable class that hold the keys and values of the dictionary
+                    weaponManager.allWeapons,                   // List of Weapon class
+                    weaponManager.weaponInventoryEntries              // Serializable class that hold the keys and values of the dictionary
                 );
 
                 // Add to UI
@@ -166,9 +173,9 @@ public class R_Player
                 {
                     addToInvCommandUI = new AddToInventoryCommandUI<IIdentifiable>
                     (
-                        w_gameManager,
-                        r_UIManager,
-                        r_UIManager.slotPrefabPath,             // Path to the prefab (resources)
+                        weaponManager,
+                        UIManager,
+                        UIManager.slotPrefabPath,             // Path to the prefab (resources)
                         identifiable                            // Is addedWeapon
                     );
                 }
@@ -190,6 +197,12 @@ public class R_Player
             selectCommand.Execute();
             addToInvCommandUI.Undo();
         }
+
+        if(weaponManager.usableWeaponDictionary.Count > 0
+        && weaponManager.usableWeaponDictionary.Count <= 2)
+        {
+            activateWeaponCommand.Execute();
+        }
     }
 
     
@@ -210,7 +223,7 @@ public class R_Player
                 bool foundMatch = false;
 
                 // Iterate through all weapons in w_gameManager
-                foreach (R_Weapon weapon in w_gameManager.allWeapons)
+                foreach (R_Weapon weapon in weaponManager.allWeapons)
                 {
                     if(tempWeapon.name == weapon.Name) 
                     {
@@ -242,7 +255,7 @@ public class R_Player
         if (input.keyCommands.Find(k => k.key == KeyCode.Tab)?.command == addCommand) 
         {
             // Check if the inventory is currently open
-            if (openInvCommandUI != null && r_UIManager.weaponInventoryUI.activeInHierarchy) 
+            if (openInvCommandUI != null && UIManager.UI_weaponInventory.activeInHierarchy) 
             {
                 // If the inventory is open, close it
                 openInvCommandUI.Undo(); // Close inventory

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class R_GameManager : MonoBehaviour
@@ -52,16 +53,18 @@ public class R_WeaponsManager
     [SerializeField] public List<Transform> spawnPoints;
 
     [Header("Weapons Inventory")]
-    [SerializeField] public List<GameObject> weaponInventoryList = new();
-    [SerializeField] public List<SerializableDictionary<string, R_Weapon>> inventoryEntries = new();
-    public Dictionary<string, R_Weapon> weaponInvDictionary = new();
+    [SerializeField] public List<GameObject> weaponsInventoryAsGameObjectList = new();
+    [SerializeField] public List<SerializableDictionary<string, R_Weapon>> weaponInventoryEntries = new();
+    public Dictionary<string, R_Weapon> weaponInventoryDictionary = new();
 
     [Header("Usable Weapons Inventory")]
-    [SerializeField] public List<R_Weapon> usableScriptableWeapons = new();
-    [SerializeField] public List<GameObject> usableGameObjectWeapons = new();
-    [SerializeField] public List<SerializableDictionary<string, R_Weapon>> usableEntries = new();
+    // [SerializeField] public List<R_Weapon> usableScriptableWeapons = new();
+    [SerializeField] public List<GameObject> usableWeaponsAsGameObjectList = new();
+    [SerializeField] public List<SerializableDictionary<string, R_Weapon>> usableWeaponInventoryEntries = new();
     public Dictionary<string, R_Weapon> usableWeaponDictionary = new();
-    [SerializeField] public List<R_Weapon> activeWeapon = new();
+    // [SerializeField] public List<R_Weapon> activeWeapon = new();
+    [SerializeField] public R_Weapon activeWeapon;
+    [SerializeField] public GameObject activeWeaponGameObject;
     
     [SerializeField] public List<SerializableDictionary<GameObject, R_Weapon>> activeWeaponEntry = new();
     
@@ -113,16 +116,16 @@ public class R_WeaponsManager
 public class R_UIManager
 {
     [Header("Weapons Inventory")]
-    [SerializeField] public GameObject weaponInventoryUI; // UI inventory
+    [SerializeField] public GameObject UI_weaponInventory; // UI inventory
     [SerializeField] public List<SerializableDictionary<string, GameObject>> slotDictionaryEntry = new(); // Class entry to store the values from the dictionary
-    public Dictionary<string, GameObject> slotDictionaryUI = new(); // Dictionary to store the UI slots
-    [SerializeField] public List<GameObject> slotListUI = new(); // List to store UI slots in (need it in order to add it into the dictionary)
+    public Dictionary<string, GameObject> UI_slotDictionary = new(); // Dictionary to store the UI slots
+    [SerializeField] public List<GameObject> UI_slotList = new(); // List to store UI slots in (need it in order to add it into the dictionary)
 
     [Header("Usable Weapons Inventory")]
-    [SerializeField] public GameObject usableInventoryUI; // Usable UI inventory
-    [SerializeField] public List<GameObject> usableWeaponsUI = new();
+    [SerializeField] public GameObject UI_usableWeaponsInventory; // Usable UI inventory
+    [SerializeField] public List<GameObject> UI_UsableWeaponsList = new();
     [SerializeField] public List<R_Weapon> selectedSlot = new();
-    
+        
     [HideInInspector] public GameObject slotPrefab; // This is just a placeholder for the slotPrefabPath
     [HideInInspector] public string slotPrefabPath = "InventorySlot"; // Path to the UI slot to instantiate
 }
@@ -130,7 +133,6 @@ public class R_UIManager
 /// <summary>
 /// This class is meant to store the keys and values from a dictionary
 /// </summary>
-/// <typeparam name="T"></typeparam>
 [System.Serializable]
 public class SerializableDictionary<TKey, TValue>
 {
