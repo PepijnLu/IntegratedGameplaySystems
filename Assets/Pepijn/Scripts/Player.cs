@@ -20,32 +20,31 @@ public class Player : EventUser
         //Set the beginning survival states
         playerStates = new()
         {
-            ["HungerState"] = stateMachine.playerStateTypes["MaxHungerState"],
-            ["HealthState"] = stateMachine.playerStateTypes["MaxHealthState"],
-            ["ThirstState"] = stateMachine.playerStateTypes["MaxThirstState"],
+            ["HungerState"] = stateMachine.playerStateTypes["NormalHungerState"],
+            ["HealthState"] = stateMachine.playerStateTypes["NormalHealthState"],
+            ["ThirstState"] = stateMachine.playerStateTypes["NormalThirstState"],
         };
     }
 
     protected override void Update()
     {
-        //Test inputs for healing / eating / drinking
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            eventManager.InvokeEvent("ChangeStat", "Health", 1f, true);
-        }
-        if(Input.GetKeyDown(KeyCode.W))
-        {
-            eventManager.InvokeEvent("ChangeStat", "Hunger", 1f, true);
-        }
+        //Try consume with Renato's player transform
         if(Input.GetKeyDown(KeyCode.E))
         {
-            eventManager.InvokeEvent("ChangeStat", "Thirst", 1f, true);
+            eventManager.InvokeEvent("TryConsume", R_Player.publicTransform);
         }
     }
 
     protected override void FixedUpdate()
     {
-        Debug.Log("Player FixedUpdate");
+        var playerStatesCopy = new Dictionary<string, PlayerState>(playerStates);
+
+        foreach(var kvp in playerStatesCopy)
+        {
+            kvp.Value.StateUpdate(this);
+        }
+        
+        eventManager.InvokeEvent("UpdateScore", 1);
     }
 }
 

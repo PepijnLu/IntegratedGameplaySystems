@@ -7,7 +7,6 @@ public class PlayerStats : EventUser
 {
     private Player player;
     private delegate void ChangeStatDelegate(string _stat, float _amount, bool justIncrement);
-    private delegate void CheckStatDelegate(string _stat, float _newAmount);
 
     public PlayerState healthState, hungerState, thirstState;
 
@@ -27,7 +26,7 @@ public class PlayerStats : EventUser
         {
             { "CurrentHealth", 10f },
             { "MaxHealth", 10f },
-            { "LowHealth", 3f },
+            { "LowHealth", 4f },
         }
         },
 
@@ -35,14 +34,14 @@ public class PlayerStats : EventUser
         {
             { "CurrentThirst", 10f },
             { "MaxThirst", 10f },
-            { "LowThirst", 3f }
+            { "LowThirst", 4f }
         }
     },
     { "Hunger", new Dictionary<string, float>()
     {
         { "CurrentHunger", 10f },
         { "MaxHunger", 10f },
-        { "LowHunger", 3f }
+        { "LowHunger", 4f }
     }
     }
     };
@@ -50,9 +49,26 @@ public class PlayerStats : EventUser
     //Change a stat
     private void ChangeStat(string _stat, float _amount, bool justIncrement)
     {
-        if (justIncrement) statsDict[_stat][$"Current{_stat}"] += _amount;
-        else statsDict[_stat][$"Current{_stat}"] = _amount;
+        if (justIncrement) 
+        {
+            if((statsDict[_stat][$"Current{_stat}"] += _amount) > statsDict[_stat][$"Max{_stat}"])
+            {
+                statsDict[_stat][$"Current{_stat}"] = statsDict[_stat][$"Max{_stat}"];
+            }
+            else
+            {
+                statsDict[_stat][$"Current{_stat}"] += _amount;
+            }
+        }
+        else 
+        {
+            statsDict[_stat][$"Current{_stat}"] = _amount;
+        }
 
+        //Failsafe for if the currentStat somehow goes above the max value
+        if(statsDict[_stat][$"Current{_stat}"] > statsDict[_stat][$"Max{_stat}"]) statsDict[_stat][$"Current{_stat}"] = statsDict[_stat][$"Max{_stat}"];
+
+        Debug.Log($"New Value: {_stat}: {statsDict[_stat][$"Current{_stat}"]}");
         eventManager.InvokeEvent("OnStatChanged", _stat, statsDict[_stat][$"Current{_stat}"]);
     }
 
@@ -60,7 +76,6 @@ public class PlayerStats : EventUser
     private void CheckStat(string _stat, float _newAmount)
     {
         string _newState;
-        
         float statAmount = statsDict[_stat][$"Current{_stat}"];
 
         if (statAmount <= 0)
@@ -71,12 +86,6 @@ public class PlayerStats : EventUser
         else if (statAmount <= statsDict[_stat][$"Low{_stat}"])
         {
             _newState = $"Low{_stat}State";
-        }
-
-        else if (statAmount >= statsDict[_stat][$"Max{_stat}"])
-        {
-            statsDict[_stat][$"Current{_stat}"] = statsDict[_stat][$"Max{_stat}"];
-            _newState = $"Max{_stat}State";
         }
         else
         {

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class R_GameManager : MonoBehaviour
 {
     // SerializeField
-    [SerializeField] private R_Player player;
+    [SerializeField] private R_Player Player;
     [SerializeField] private R_WeaponsManager weaponGameManager;
     [SerializeField] private R_UIManager r_UIManager;
 
@@ -22,7 +21,7 @@ public class R_GameManager : MonoBehaviour
     {
         // Player
         playerObj = Instantiate(player.prefab, player.spawnPoint.position, player.spawnPoint.rotation);
-        player = new(playerObj.transform, 10f, weaponGameManager, r_UIManager)
+        Player = new(playerObj.transform, 10f, weaponGameManager, r_UIManager)
         {
             inventory = playerObj.transform.GetChild(0).gameObject,
             usableInventory = playerObj.transform.GetChild(1).gameObject,
@@ -30,6 +29,12 @@ public class R_GameManager : MonoBehaviour
         };
 
         // UI
+
+        Camera.main.gameObject.transform.SetParent(player.transform);
+        
+        // Instantiate R_Player with the player's Transform
+
+        uIManager = new();
     }
 
     void Start()

@@ -7,8 +7,10 @@ public class R_Player
     [SerializeField] private GameObject tempWeapon;
 
     // Public
+    public static Transform publicTransform;
     public GameObject prefab;
     public Transform spawnPoint;
+    public static Transform publicTransform;
     
     
     public GameObject inventory, usableInventory, activeWeaponSlot;
@@ -37,13 +39,16 @@ public class R_Player
         Transform transform, 
         float movementSpeed, 
         R_WeaponsManager weaponManager,
-        R_UIManager UIManager
+        R_UIManager UIManager,
+        Transform transform
     ) 
     {
         this.transform = transform;
         this.movementSpeed = movementSpeed;
+        publicTransform = transform;
         this.weaponManager = weaponManager; // Set the instance
         this.UIManager = UIManager;
+        publicTransform = transform;
 
         CustomAwake();
     }

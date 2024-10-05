@@ -2,12 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class EventManager
 {
+    [SerializeField] public GameObject prefab;
     private Dictionary<string, Action> actions = new();
     private Dictionary<string, Delegate> events = new();
-    public EventManager() {}
+    public Tilemap interactableTileMap;
+    public EventManager(Tilemap _tilemap) 
+    {
+        interactableTileMap = _tilemap;
+    }
 
 //Actions are empty events
     public void InvokeAction(string myEvent)
