@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ConcreteComponentAdd<T> : IComponentAdd
+public class ComponentAdd<T> : IComponentAdd
 {
     private ConcreteDecoratorAdd decorator;
     private readonly List<T> list;
     private readonly GameObject inventory;
     private readonly T t;
 
-    public ConcreteComponentAdd
+    public ComponentAdd
     (
         List<T> list,
         GameObject inventory, 
@@ -99,10 +99,3 @@ public class ConcreteComponentAdd<T> : IComponentAdd
     }
 }
 
-
-
-// public class ConcreteComponentCombat : IComponentCombat 
-// {
-//     private ConcreteDecorator concreteDecorator;
-
-// }

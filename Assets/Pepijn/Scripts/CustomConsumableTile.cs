@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,7 +11,7 @@ public class CustomConsumableTile : Tile, IConsumable
     [SerializeField] private string statToChange;
     [SerializeField] private int consumesBeforeDelete;
     private Vector3Int tilePosition;
-    private Dictionary<Vector3Int, int> tilePositionsConsumesLeft = new();
+    private readonly Dictionary<Vector3Int, int> tilePositionsConsumesLeft = new();
 
     public void SetEventManager(EventManager _eventManager)
     {

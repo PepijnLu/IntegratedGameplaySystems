@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AddToInventory<T> : ICommand
 {
-    private ConcreteComponentAdd<T> component;
+    private ComponentAdd<T> component;
     private readonly List<T> list;
     private readonly GameObject inventory;
     private readonly T t;

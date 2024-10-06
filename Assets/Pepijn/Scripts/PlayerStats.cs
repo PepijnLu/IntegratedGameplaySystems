@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlayerStats : EventUser
 {
-    private Player player;
     private delegate void ChangeStatDelegate(string _stat, float _amount, bool justIncrement);
 
     public PlayerState healthState, hungerState, thirstState;

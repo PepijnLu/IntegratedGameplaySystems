@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 public class AddToUsableInventoryCommand: ICommand
 {
-    private readonly R_Player player;
+    private readonly Player player;
     private readonly R_WeaponsManager weaponGameManager;                                
     private readonly R_UIManager UIManager;
     private readonly List<R_Weapon> selectedSlot;
 
     public AddToUsableInventoryCommand
     (
-        R_Player player,
+        Player player,
         List<R_Weapon> selectedSlot,
         R_WeaponsManager weaponGameManager,
         R_UIManager UIManager

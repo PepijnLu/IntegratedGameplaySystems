@@ -1,15 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class R_Player
+public class Player : EventUser
 {
     private R_GameManager gameManager;
     // SerializeField
     [SerializeField] private GameObject tempWeapon;
 
     // Public
-    public static Transform publicTransform;
-    public GameObject prefab;
+    // public GameObject prefab;
     public Transform spawnPoint;    
     
     public GameObject inventory, usableInventory, activeWeaponSlot;
@@ -32,9 +31,15 @@ public class R_Player
     private readonly float movementSpeed;
 
     private bool isInventoryOpen;
+
+
+    // PEPIJN
+    private PlayerStats playerStats;
+    public StateMachine stateMachine;
+    public Dictionary<string, PlayerState> playerStates;
  
     // Constructor
-    public R_Player
+    public Player
     (
         R_GameManager gameManager,
         R_WeaponsManager weaponManager,
@@ -49,13 +54,27 @@ public class R_Player
         this.transform = transform;
         this.movementSpeed = movementSpeed;
 
-        publicTransform = transform;
-
-        CustomAwake();
+        CustomAwake();        
     }
 
     public void CustomAwake() 
     {
+        // PEPIJN
+        //Give the player stats and a statemachine
+        playerStats = new();
+        stateMachine = new(this);
+
+        eventManager.SubscribeToAction("Update", Update);
+        eventManager.SubscribeToAction("FixedUpdate", FixedUpdate);
+
+        //Set the beginning survival states
+        playerStates = new()
+        {
+            ["HungerState"] = stateMachine.playerStateTypes["NormalHungerState"],
+            ["HealthState"] = stateMachine.playerStateTypes["NormalHealthState"],
+            ["ThirstState"] = stateMachine.playerStateTypes["NormalThirstState"],
+        };
+
         // Input key
         input = new();
 
@@ -80,7 +99,7 @@ public class R_Player
             null
         );
         
-        componentAdd = new ConcreteComponentAdd<GameObject>
+        componentAdd = new ComponentAdd<GameObject>
         (
             weaponManager.weaponsInventoryAsGameObjectList,
             inventory, 
@@ -130,8 +149,8 @@ public class R_Player
         input.BindInputToCommand(KeyCode.Q, switchWeaponCommand);
         input.BindInputToCommand(KeyCode.Z, normalAttackCommand);
     }
-    
-    public void CustomUpdate() 
+
+    protected override void Update() 
     {
         addCommand = input.HandleKeyInput();
 
@@ -219,8 +238,25 @@ public class R_Player
         {
             normalAttackCommand.Execute();
         }
+
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            // 3RTH STAGE
+            eventManager.InvokeEvent("TryConsume", transform);
+        }
     }
 
+    protected override void FixedUpdate() 
+    {
+        var playerStatesCopy = new Dictionary<string, PlayerState>(playerStates);
+
+        foreach(var kvp in playerStatesCopy)
+        {
+            kvp.Value.StateUpdate(this);
+        }
+        
+        eventManager.InvokeEvent("UpdateScore", 1);
+    }
     
     public bool InRangeOfWeapon()
     {

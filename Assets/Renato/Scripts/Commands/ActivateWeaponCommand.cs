@@ -7,11 +7,11 @@ public class ActivateWeaponCommand : ICommand
     private AddToUsableInventoryCommand selectCommand;
     private readonly R_WeaponsManager weaponManager;
     private readonly R_UIManager UIManager;
-    private readonly R_Player player;
+    private readonly Player player;
 
     public ActivateWeaponCommand
     (
-        R_Player player,
+        Player player,
         R_WeaponsManager weaponManager,
         R_UIManager UIManager
     ) 

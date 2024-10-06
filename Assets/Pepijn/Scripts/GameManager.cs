@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         //Initialize the necessary classes
         new UIManager(overlay, scoreText);
         new SceneLoader();
-        new Player();
+        // new Player();
         new DecreaseStatsOverTime();
 
         //Invoke start

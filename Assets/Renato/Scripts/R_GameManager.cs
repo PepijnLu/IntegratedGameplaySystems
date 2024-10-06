@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 public class R_GameManager : MonoBehaviour
 {
     // SerializeField
-    [SerializeField] private R_Player player;
+    [SerializeField] private Player player;
     [SerializeField] private R_WeaponsManager weaponGameManager;
     [SerializeField] private R_UIManager UIManager;
 
@@ -17,16 +20,82 @@ public class R_GameManager : MonoBehaviour
 
     // Private Readonly
 
-    void Awake() 
+
+    // Pepijn
+    private EventManager eventManager;
+    [SerializeField] private Tilemap _interactablesTileMap; 
+    private List<TileBase> customTileBases;
+    protected delegate void Vector3IntDelegate(Vector3Int _transform);
+    [SerializeField] private SpriteRenderer overlay;
+    [SerializeField] private TextMeshProUGUI scoreText;
+
+    void Start()
     {
+        if(SceneManager.GetActiveScene().name == "Pepijn")
+        {
+            GameStartUp();
+        }
+
+        if(SceneManager.GetActiveScene().name == "GameOver")
+        {
+            scoreText.text = $"Score: {ScoreData.score}";
+        }
+
+        if(player == null) 
+        {
+            Debug.Log("Player not found from Start");
+            return;
+        }
+
+        player.CustomStart();
+        weaponGameManager.CustomStart();
+    }
+
+    private void GameStartUp()
+    {
+        //Make a new EventManager
+        eventManager = new EventManager(_interactablesTileMap);
+
+        //Make an empty event user and set the static eventManager reference for all objects and subjects to use
+        EventUser placeholderEventUser = new();
+        placeholderEventUser.SetEventManager(eventManager);
+
+        //For each TileBase, subscribe to the consume event
+        customTileBases = GetTypeBasesFromAssets();
+        foreach (TileBase _base in customTileBases)
+        {
+            Debug.Log($"{_base.name}");
+
+            if (_base is CustomConsumableTile _customTile)
+            {
+                _customTile.SetEventManager(eventManager);
+                _customTile.SubscribeToEvent();
+            }
+        }
+
+        eventManager.SubscribeToEvent("SetTileToNull", new Vector3IntDelegate(SetTileToNull));
+
+        //Initialize the necessary classes
+        new UIManager(overlay, scoreText);
+        new SceneLoader();
+        // new Player();
+        new DecreaseStatsOverTime();
+
+        //Invoke start
+        eventManager.InvokeAction("Start");
+
+
         // Player
-        playerObj = Instantiate(player.prefab, player.spawnPoint.position, Quaternion.identity);
+        GameObject prefab = Resources.Load<GameObject>("Player"); 
+        playerObj = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
         
         player = new
         (
             this,
             weaponGameManager, 
-            UIManager, playerObj.transform, 10f
+            UIManager, 
+            playerObj.transform, 
+            10f
         )
         {
             inventory = playerObj.transform.GetChild(0).gameObject,
@@ -45,26 +114,46 @@ public class R_GameManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        if(player == null) 
-        {
-            Debug.Log("Player not found from Start");
-            return;
-        }
-
-        player.CustomStart();
-        weaponGameManager.CustomStart();
-    }
-
     void Update()
     {
-        if(player == null) 
+        if(SceneManager.GetActiveScene().name == "Pepijn")
         {
-            Debug.Log("Player not found from Update");
-            return;
+            // LAST STAGE
+            //Invoke the update method
+            eventManager.InvokeAction("Update");
         }
-        player.CustomUpdate();
+    }
+
+    private void FixedUpdate()
+    {
+        if(SceneManager.GetActiveScene().name == "Pepijn")
+        {
+            //Invoke the update method
+            eventManager.InvokeAction("FixedUpdate");
+        }
+    }
+
+    private void SetTileToNull(Vector3Int _cellPosition)
+    {
+        _interactablesTileMap.SetTile(_cellPosition, null);
+    }
+
+    //Get all the custom tiles in a list
+    private List<TileBase> GetTypeBasesFromAssets()
+    {
+        return new List<TileBase>(Resources.LoadAll<TileBase>("CustomTiles"));
+    }
+
+
+    //Functionality for menu buttons
+    public void LoadGameScene()
+    {
+        SceneManager.LoadScene("Pepijn");
+    }
+
+    public void QuitApplication()
+    {
+        Application.Quit();
     }
 }
 
