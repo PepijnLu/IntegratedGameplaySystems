@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class R_Player
 {
+    private R_GameManager gameManager;
     // SerializeField
     [SerializeField] private GameObject tempWeapon;
 
@@ -21,6 +22,7 @@ public class R_Player
     private ICommand addToInvCommandUI, openInvCommandUI;
     private ICommand selectCommand;
     private ICommand switchWeaponCommand, activateWeaponCommand;
+    private AttackCommand normalAttackCommand;
     private IComponentAdd componentAdd;
     
     // Private readonly
@@ -34,12 +36,14 @@ public class R_Player
     // Constructor
     public R_Player
     (
+        R_GameManager gameManager,
         R_WeaponsManager weaponManager,
         R_UIManager UIManager,
         Transform transform,
         float movementSpeed
     ) 
-    {        
+    {   
+        this.gameManager = gameManager;
         this.weaponManager = weaponManager;
         this.UIManager = UIManager;
         this.transform = transform;
@@ -88,9 +92,9 @@ public class R_Player
         selectCommand = new AddToUsableInventoryCommand
         (
             this,
-            UIManager.selectedSlot,       // Slot of selected weapons
+            UIManager.selectedSlot,         // Slot of selected weapons
             weaponManager,                  // Weapon game manager class
-            UIManager                     // UI manager class
+            UIManager                       // UI manager class
         );
 
 
@@ -98,7 +102,7 @@ public class R_Player
         (
             weaponManager,
             UIManager,
-            UIManager.slotPrefabPath,             // Path to the prefab (resources)
+            UIManager.slotPrefabPath,               // Path to the prefab (resources)
             null                                    // Is addedWeapon
         );
 
@@ -114,8 +118,8 @@ public class R_Player
             UIManager
         );
 
-        // Get the inventory
-
+        normalAttackCommand = ScriptableObject.CreateInstance<AttackCommand>();
+        normalAttackCommand.Initialize(gameManager, weaponManager);;
     } 
 
     public void CustomStart() 
@@ -124,6 +128,7 @@ public class R_Player
         input.BindInputToCommand(KeyCode.R, removeCommand);
         input.BindInputToCommand(KeyCode.Tab, openInvCommandUI);
         input.BindInputToCommand(KeyCode.Q, switchWeaponCommand);
+        input.BindInputToCommand(KeyCode.Z, normalAttackCommand);
     }
     
     public void CustomUpdate() 
@@ -165,7 +170,6 @@ public class R_Player
                     }
                 }
                 
-
                 // Add to dictionary
                 var addedWeapon = componentAdd.AddToDictionary
                 (
@@ -209,6 +213,11 @@ public class R_Player
         && weaponManager.usableWeaponDictionary.Count <= 2)
         {
             activateWeaponCommand.Execute();
+        }
+
+        if(input.keyCommands.Find(k => k.key == KeyCode.Z)?.command == addCommand)
+        {
+            normalAttackCommand.Execute();
         }
     }
 

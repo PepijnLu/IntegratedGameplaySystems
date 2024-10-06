@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f97649b1a7cdfd4d925528eccaa5095, type: 3}
+  m_Name: Staff
+  m_EditorClassIdentifier: 
+  weaponType: 2
+  weaponPrefab: {fileID: 4092861166927418905, guid: 6684a068befefdd4c98932ad33e43b39, type: 3}
+  normalAbilityPrefab: {fileID: 3430027312939580857, guid: 3b0ceaeb181a9c04c89a39093e99079a, type: 3}
+  newWeapon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 47fcd4297eccc3b4c9e71c53e6cb50d0, type: 3}
+  name: Staff
+  isAdded: 0
+  isGrabable: 0
+  isActive: 1
+  isSelectedInInventory: 0
+  isSelectedInUsable: 0
+  isAttacking: 0
+  combatStartPosition: {x: -0.25, y: 1.1}
+  combatEndPosition: {x: 0.4, y: 0.85}
+  combatStartEulerRotation: {x: 0, y: 0, z: 0}
+  combatEndEulerRotation: {x: 0, y: 0, z: -26}
+  attackRate: 0.25
+  abilityFireSpeed: 5
+  abilityLifeTime: 3
+  combatStartRotation: {x: 0, y: 0, z: 0, w: 1}
+  combatEndRotation: {x: 0, y: 0, z: -0.22495104, w: 0.97437006}

@@ -22,7 +22,12 @@ public class R_GameManager : MonoBehaviour
         // Player
         playerObj = Instantiate(player.prefab, player.spawnPoint.position, Quaternion.identity);
         
-        player = new(weaponGameManager, UIManager, playerObj.transform, 10f)
+        player = new
+        (
+            this,
+            weaponGameManager, 
+            UIManager, playerObj.transform, 10f
+        )
         {
             inventory = playerObj.transform.GetChild(0).gameObject,
             usableInventory = playerObj.transform.GetChild(1).gameObject,
@@ -64,7 +69,6 @@ public class R_GameManager : MonoBehaviour
 }
 
 [System.Serializable]
-
 public class R_WeaponsManager 
 {
     [Header("Game Management")]

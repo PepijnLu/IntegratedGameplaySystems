@@ -73,12 +73,8 @@ public class R_InputHandler
         {
             Debug.LogWarning("Transform is null");
         }
-        else 
-        {
-            Debug.Log($"{transform.name} found");
-        }
-        transform.Translate(direction);
-        
+    
+        transform.Translate(direction);    
         return null;
     }
 

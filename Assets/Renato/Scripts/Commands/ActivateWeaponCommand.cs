@@ -131,6 +131,8 @@ public class ActivateWeaponCommand : ICommand
 
         foreach (var element in weaponManager.usableWeaponDictionary)
         {
+            element.Value.isActive = false; 
+
             if (element.Value.isSelectedInUsable) 
             {
                 GameObject weaponGameObject = weaponManager.usableWeaponsAsGameObjectList.FirstOrDefault(wgo => wgo.name == element.Value.Name);
@@ -149,6 +151,13 @@ public class ActivateWeaponCommand : ICommand
                     Debug.Log($"Activated weapon: {element.Value.Name}");
                 }
             }
+
+        }
+        
+        // Reset selection state for all weapons
+        foreach (var element in weaponManager.usableWeaponDictionary)
+        {
+            element.Value.isSelectedInUsable = false;
         }
     }
 

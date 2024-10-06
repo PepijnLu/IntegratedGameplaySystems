@@ -25,6 +25,7 @@ public class ConcreteDecoratorAdd : DecoratorAdd
                 // Debug.Log($"Added {gameObject.name} to list. Message from Decorator class");
                 gameObject.SetActive(false);
                 gameObject.GetComponent<CircleCollider2D>().enabled = false;
+                gameObject.transform.localPosition = new(.15f, 1.8f);
             }
             else
             {
