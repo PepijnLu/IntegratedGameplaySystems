@@ -3,18 +3,19 @@ using UnityEngine;
 
 public class Player : EventUser
 {
-    private R_GameManager gameManager;
-    // SerializeField
     [SerializeField] private GameObject tempWeapon;
-
-    // Public
-    // public GameObject prefab;
-    public Transform spawnPoint;    
-    
-    public GameObject inventory, usableInventory, activeWeaponSlot;
-
-    // Private
+    private readonly R_WeaponsManager weaponManager;
+    private readonly R_UIManager UIManager;
+    private readonly Transform transform; // Player's transform
+    private float movementSpeed;
+    private bool isInventoryOpen;
+    private GameManager gameManager;
+    private PlayerStats playerStats;
     private R_InputHandler input; // Key input
+    public Transform spawnPoint;    
+    public GameObject inventory, usableInventory, activeWeaponSlot;
+    public StateMachine stateMachine;
+    public Dictionary<string, PlayerState> playerStates;
 
     [Header("Commands")]
     private ICommand addCommand, removeCommand;
@@ -23,25 +24,10 @@ public class Player : EventUser
     private ICommand switchWeaponCommand, activateWeaponCommand;
     private AttackCommand normalAttackCommand;
     private IComponentAdd componentAdd;
-    
-    // Private readonly
-    private readonly R_WeaponsManager weaponManager;
-    private readonly R_UIManager UIManager;
-    private readonly Transform transform; // Player's transform
-    private readonly float movementSpeed;
 
-    private bool isInventoryOpen;
-
-
-    // PEPIJN
-    private PlayerStats playerStats;
-    public StateMachine stateMachine;
-    public Dictionary<string, PlayerState> playerStates;
- 
-    // Constructor
     public Player
     (
-        R_GameManager gameManager,
+        GameManager gameManager,
         R_WeaponsManager weaponManager,
         R_UIManager UIManager,
         Transform transform,
@@ -252,7 +238,7 @@ public class Player : EventUser
 
         foreach(var kvp in playerStatesCopy)
         {
-            kvp.Value.StateUpdate(this);
+            kvp.Value.StateFixedUpdate(this);
         }
         
         eventManager.InvokeEvent("UpdateScore", 1);
@@ -299,6 +285,11 @@ public class Player : EventUser
         }
 
         return false;
+    }
+
+    public void SetMoveSpeed(float _moveSpeed)
+    {
+        movementSpeed = _moveSpeed;
     }
 
     public void OpenInventoryUI(R_InputHandler input) 

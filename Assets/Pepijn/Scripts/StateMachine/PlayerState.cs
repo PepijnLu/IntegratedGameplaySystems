@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,26 +20,23 @@ public class PlayerState : EventUser
     }
 
     //Logic for entering a state
-    public virtual void OnStateEnter(Player _obj)
-    {
-
-    }
+    public virtual void OnStateEnter(Player _obj) {}
 
     //Logic for exiting a state
-    public virtual void OnStateExit(Player _obj)
-    {
+    public virtual void OnStateExit(Player _obj) {}
 
-    }
+    //State update function
+    public virtual void StateUpdate(Player _obj) {}
 
-    public virtual void StateUpdate(Player _obj)
-    {
-
-    }
+    //State fixed update function
+    public virtual void StateFixedUpdate(Player _obj) {}
 }
 
+
+//All the different states that correspond to how high a stat is
 public class NormalHungerState : PlayerState
 {
-    public override void StateUpdate(Player _obj)
+    public override void StateFixedUpdate(Player _obj)
     {
         eventManager.InvokeEvent("ChangeStat", "Health", 0.015f, true);
     }
@@ -53,7 +49,7 @@ public class LowHungerState : PlayerState
 
 public class ZeroHungerState : PlayerState
 {
-    public override void StateUpdate(Player _obj)
+    public override void StateFixedUpdate(Player _obj)
     {
         eventManager.InvokeEvent("ChangeStat", "Health", -0.015f, true);
     }
@@ -84,12 +80,18 @@ public class ZeroThirstState : PlayerState
 
 public class NormalHealthState : PlayerState
 {
-
+    public override void OnStateEnter(Player _obj)
+    {
+        _obj.SetMoveSpeed(10f);
+    }
 }
 
 public class LowHealthState : PlayerState
 {
-
+    public override void OnStateEnter(Player _obj)
+    {
+        _obj.SetMoveSpeed(5f);
+    }
 }
 
 public class ZeroHealthState : PlayerState

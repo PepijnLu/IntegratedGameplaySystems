@@ -4,30 +4,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-public class R_GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     // SerializeField
     [SerializeField] private Player player;
     [SerializeField] private R_WeaponsManager weaponGameManager;
     [SerializeField] private R_UIManager UIManager;
-
-    // Public
-
-    // Protected
-
-    // Private
-    public GameObject playerObj;
-
-    // Private Readonly
-
-
-    // Pepijn
-    private EventManager eventManager;
-    [SerializeField] private Tilemap _interactablesTileMap; 
-    private List<TileBase> customTileBases;
-    protected delegate void Vector3IntDelegate(Vector3Int _transform);
     [SerializeField] private SpriteRenderer overlay;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private Tilemap _interactablesTileMap; 
+    private EventManager eventManager;
+    private List<TileBase> customTileBases;
+    protected delegate void Vector3IntDelegate(Vector3Int _transform);
+    public GameObject playerObj;
 
     void Start()
     {
@@ -78,12 +67,7 @@ public class R_GameManager : MonoBehaviour
         //Initialize the necessary classes
         new UIManager(overlay, scoreText);
         new SceneLoader();
-        // new Player();
         new DecreaseStatsOverTime();
-
-        //Invoke start
-        eventManager.InvokeAction("Start");
-
 
         // Player
         GameObject prefab = Resources.Load<GameObject>("Player"); 
@@ -103,15 +87,10 @@ public class R_GameManager : MonoBehaviour
             activeWeaponSlot = playerObj.transform.GetChild(2).gameObject
         };
 
-        // UI
         Camera.main.gameObject.transform.SetParent(playerObj.transform);
-        // UIManager = new();
 
-        if(player == null) 
-        {
-            Debug.Log("Player not found from Awake");
-            return;
-        }
+        //Invoke start
+        eventManager.InvokeAction("Start");
     }
 
     void Update()

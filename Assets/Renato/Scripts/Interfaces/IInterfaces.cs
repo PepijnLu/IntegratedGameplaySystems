@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ICombat 
 {
-    abstract IEnumerator ExecuteCombat(IAttackable attackable, R_WeaponsManager weaponManager, R_GameManager gameManager);
+    abstract IEnumerator ExecuteCombat(IAttackable attackable, R_WeaponsManager weaponManager, GameManager gameManager);
 }
 
 public interface ICommand

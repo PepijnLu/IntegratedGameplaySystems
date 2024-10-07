@@ -23,6 +23,8 @@ public class CustomConsumableTile : Tile, IConsumable
         Debug.Log("Tile Subscribed To Event");
         eventManager.SubscribeToEvent("TryConsume", new TransformDelegate(TryConsumeTile));
     }
+
+    //Eat or drink the tile
     public void Consume(Vector3Int _cellPosition)
     {
         eventManager.InvokeEvent("ChangeStat", statToChange, amountToChange, true);
@@ -38,27 +40,23 @@ public class CustomConsumableTile : Tile, IConsumable
         }
     }
 
+    //Tile constructor
     public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go)
     {
-        if(!tilePositionsConsumesLeft.ContainsKey(position)) tilePositionsConsumesLeft.Add(position, consumesBeforeDelete);
-
-        Debug.Log($"Custom Tile at {tilePosition}");
+        //If this tile doesnt have an entry in the dictionary, create one
+        if(!tilePositionsConsumesLeft.ContainsKey(position)) 
+        {
+            tilePositionsConsumesLeft.Add(position, consumesBeforeDelete);
+        }
 
         return false; 
     }
     private void TryConsumeTile(Transform _transform)
     {
-        // ERROR STARTS HERE
         Vector3Int cellPosition = eventManager.interactableTileMap.WorldToCell(_transform.position);
-
-        if(eventManager.interactableTileMap == null) 
-        {
-            Debug.LogWarning("No interactable tilemap found");
-        }
 
         if(tilePositionsConsumesLeft.ContainsKey(cellPosition))
         {
-            Debug.Log($"Tile consumed at {cellPosition}");
             Consume(cellPosition);
         }
     }

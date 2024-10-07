@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -37,7 +36,7 @@ public class EventManager
         };
     }
 
-    //Events are delegates that take parameters
+//Events are delegates that take parameters
     public void InvokeEvent(string myEvent, params object[] paramaters)
     {
         if (events.ContainsKey(myEvent))

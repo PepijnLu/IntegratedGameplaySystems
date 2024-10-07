@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class AttackCommand : NormalAttack, ICommand
 {
-    private R_GameManager gameManager;
+    private GameManager gameManager;
     private R_WeaponsManager weaponManager;
 
-    public void Initialize(R_GameManager gameManager, R_WeaponsManager weaponManager)
+    public void Initialize(GameManager gameManager, R_WeaponsManager weaponManager)
     {
         this.gameManager = gameManager;
         this.weaponManager = weaponManager;

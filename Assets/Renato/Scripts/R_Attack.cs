@@ -10,7 +10,7 @@ public class NormalAttack : ScriptableObject, ICombat
         IAttackable attackable, 
         IAttackableAbility attackableAbility, 
         R_WeaponsManager weaponManager, 
-        R_GameManager gameManager
+        GameManager gameManager
     ) 
     {
 
@@ -65,7 +65,7 @@ public class NormalAttack : ScriptableObject, ICombat
         IAttackable attackable, 
         IAttackableAbility attackableAbility,
         R_WeaponsManager weaponManager, 
-        R_GameManager gameManager
+        GameManager gameManager
     ) 
     {
         gameManager.StartCoroutine(ExecuteCombat
@@ -94,7 +94,7 @@ public class NormalAttack : ScriptableObject, ICombat
         Destroy(fireball);
     }
 
-    public IEnumerator ExecuteCombat(IAttackable attackable, R_WeaponsManager weaponManager, R_GameManager gameManager)
+    public IEnumerator ExecuteCombat(IAttackable attackable, R_WeaponsManager weaponManager, GameManager gameManager)
     {
         GameObject weaponGameObject = weaponManager.activeWeaponGameObject;
 
