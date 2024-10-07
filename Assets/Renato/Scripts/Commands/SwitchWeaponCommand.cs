@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SwapWeaponCommand : ICommand
 {
-    public R_Weapon currentWeapon;
+    private R_Weapon currentWeapon;
     private readonly R_WeaponsManager weaponManager;
     string currentWeaponKey;
 
@@ -36,7 +36,7 @@ public class SwapWeaponCommand : ICommand
         
     }
 
-    public void SwapWeapon() 
+    private void SwapWeapon() 
     {
         R_Weapon weapon = null;
         GameObject weaponGameObject = null;

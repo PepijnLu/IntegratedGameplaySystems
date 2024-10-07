@@ -34,7 +34,3 @@ public class AttackCommand : NormalAttack, ICommand
     }
 }
 
-public interface ICombat 
-{
-    abstract IEnumerator ExecuteCombat(IAttackable attackable, R_WeaponsManager weaponManager, R_GameManager gameManager);
-}

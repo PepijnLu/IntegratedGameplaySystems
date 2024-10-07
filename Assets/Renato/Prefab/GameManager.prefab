@@ -366,8 +366,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponGameManager:
     allWeapons:
-    - {fileID: 11400000, guid: bd5261ed0e02f2944bc77e278d7ce174, type: 2}
-    - {fileID: 11400000, guid: 1bff3daa9e6fb8c44892947a6d44bffe, type: 2}
     - {fileID: 11400000, guid: 9dacfae7cf3bb5846abae8bd0149f591, type: 2}
     - {fileID: 11400000, guid: f9e47587310b6944fbb33a9b04e3f4ed, type: 2}
     - {fileID: 11400000, guid: 3f396857e31280d40b8b84e1b8cdf509, type: 2}

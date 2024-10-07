@@ -128,20 +128,3 @@ public class R_Weapon : ScriptableObject, IIdentifiable, IAttackable, IAttackabl
         combatEndRotation = Quaternion.Euler(combatEndEulerRotation);
     }
 }
-
-
-public interface IAttackable
-{
-    Vector2 CombatStartPosition { get; }
-    Vector2 CombatEndPosition { get; }
-    Vector3 CombatStartRotation { get; }
-    Vector3 CombatEndRotation { get; }
-    float AttackRate { get; }
-}
-
-public interface IAttackableAbility 
-{
-    GameObject NormalAbilityPrefab { get; }
-    float AbilityFireSpeed { get; }
-    float AbilityLifeTime { get; } 
-}
